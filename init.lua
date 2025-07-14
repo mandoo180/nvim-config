@@ -604,3 +604,40 @@ require("lazy").setup({
   -- automatically check for plugin updates
   checker = { enabled = true },
 })
+
+
+-- ============================================================================
+-- LSP
+-- ============================================================================
+
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', 'gd',         vim.lsp.buf.definition, opts)
+vim.keymap.set('n', 'K',          vim.lsp.buf.hover, opts)
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+vim.keymap.set('n', 'gr',         vim.lsp.buf.references, opts)
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+
+-- Lua
+vim.lsp.enable('luals')
+vim.lsp.config['luals'] = {
+    -- Command and arguments to start the server.
+    cmd = { 'lua-language-server' },
+    -- Filetypes to automatically attach to.
+    filetypes = { 'lua' },
+    -- Sets the "root directory" to the parent directory of the file in the
+    -- current buffer that contains either a ".luarc.json" or a
+    -- ".luarc.jsonc" file. Files that share a root directory will reuse
+    -- the connection to the same LSP server.
+    -- Nested lists indicate equal priority, see |vim.lsp.Config|.
+    root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+    -- Specific settings to send to the server. The schema for this is
+    -- defined by the server. For example the schema for lua-language-server
+    -- can be found here https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
+    settings = {
+        Lua = {
+            runtime = {
+                version = 'LuaJIT',
+            }
+        }
+    }
+}
