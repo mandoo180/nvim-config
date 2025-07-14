@@ -163,6 +163,23 @@ vim.keymap.set('i', '<M-BS>', '<C-o>db', opts)
 vim.keymap.set('i', '<M-DEL>', '<C-o>dw', opts)
 vim.keymap.set('i', '<M-d>', '<C-o>dw', opts)
 
+-- Motions in minibuffer
+vim.keymap.set('c', '<C-f>', '<Right>')
+vim.keymap.set('c', '<C-b>', '<Left>')
+vim.keymap.set('c', '<C-p>', '<Up>')
+vim.keymap.set('c', '<M-p>', '<Up>')
+vim.keymap.set('c', '<C-n>', '<Down>')
+vim.keymap.set('c', '<M-n>', '<Down>')
+vim.keymap.set('c', '<M-f>', '<C-Right>')
+vim.keymap.set('c', '<M-b>', '<C-Left>')
+vim.keymap.set('c', '<C-a>', '<Home>')
+vim.keymap.set('c', '<C-e>', '<End>')
+
+vim.keymap.set('c', '<C-d>', '<Del>')
+vim.keymap.set('c', '<M-d>', '<C-Del>')
+vim.keymap.set('c', '<M-BS>', '<C-BS>')
+vim.keymap.set('c', '<C-g>', '<ESC>')
+
 -- ============================================================================
 -- USEFUL FUNCTIONS
 -- ============================================================================
