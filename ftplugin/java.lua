@@ -24,14 +24,14 @@ local jdtls_config = {
         "--add-opens",
         "java.base/java.lang=ALL-UNNAMED",
         "-jar",
-        data_dir .. "/jdtls/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
+        vim.fn.stdpath("data") .. "/jdtls/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
         -- "/home/hydroakri/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.1.6.700.v20231214-2017.jar",
         -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^                                       ^^^^^^^^^^^^^^
         -- Must point to the                                                     Change this to
         -- eclipse.jdt.ls installation                                           the actual version
         -- 💀
         "-configuration",
-        data_dir .. "/jdtls/config_linux",
+        vim.fn.stdpath("data") .. "/jdtls/config_mac", -- FIXME: change to an environment variable
         -- "/home/hydroakri/.local/share/nvim/mason/packages/jdtls/config_linux",
         -- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^        ^^^^^^
         -- Must point to the                      Change to one of `linux`, `win` or `mac`
@@ -85,7 +85,7 @@ local jdtls_config = {
     init_options = {
         bundles = {
             -- vim.fn.glob(os.getenv("HOME") .. "/Projects/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar"),
-            os.getenv("HOME") .. "/Projects/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar",
+            vim.fn.stdpath("data") .. "/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar",
         },
     },
     on_attach = function(client, bufnr)
@@ -100,7 +100,7 @@ local jdtls_config = {
                 request = "attach";
                 name = "Attach to Running App";
                 hostName = "127.0.0.1";
-                port = 5005;
+                port = 1044;
             },
         }
         -- dap.adapters.java = function(callback)
