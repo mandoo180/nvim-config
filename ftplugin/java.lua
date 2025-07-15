@@ -1,3 +1,4 @@
+local jdtls = require('jdtls')
 local data_dir = vim.fn.stdpath("data")
 local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
 -- local workspace_dir = "/home/douzone/Projects/" .. project_name
@@ -5,7 +6,7 @@ local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
 local workspace_dir = data_dir .. "/jdtls-workspaces/" .. project_name
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
-local config = {
+local jdtls_config = {
     -- The command that starts the language server
     -- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
     cmd = {
@@ -49,6 +50,8 @@ local config = {
     -- for a list of options
     settings = {
         java = {
+            signatureHelp = { enabled = true, },
+            contentProvider = { preferred = 'fernflower'},
             eclipse = {
                 downloadSources = true,
             },
@@ -80,7 +83,56 @@ local config = {
     --
     -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
     init_options = {
-        bundles = {},
+        bundles = {
+            -- vim.fn.glob(os.getenv("HOME") .. "/Projects/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar"),
+            os.getenv("HOME") .. "/Projects/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar",
+        },
     },
+    on_attach = function(client, bufnr)
+        -- require('me.lsp.conf').on_attach(client, bufnr, {
+        --     server_side_fuzzy_completion = true,
+        -- })
+        local dap = require('dap')
+        dap.set_log_level("DEBUG")
+        dap.configurations.java = {
+            {
+                type = "java";
+                request = "attach";
+                name = "Attach to Running App";
+                hostName = "127.0.0.1";
+                port = 5005;
+            },
+        }
+        -- dap.adapters.java = function(callback)
+        --     callback({
+        --         type = "server";
+        --         host = "127.0.0.1";
+        --         port = 5005;
+        --     })
+        -- end
+        jdtls.setup_dap({ hotcodereplace = 'auto' })
+        jdtls.setup.add_commands()
+        local opts = { silent = true, buffer = bufnr }
+        vim.keymap.set('n', "<M-o>", jdtls.organize_imports, opts)
+        -- vim.keymap.set('n', "<leader>df", jdtls.test_class, opts)
+        -- vim.keymap.set('n', "<leader>dn", jdtls.test_nearest_method, opts)
+        -- vim.keymap.set('n', "crv", jdtls.extract_variable, opts)
+        -- vim.keymap.set('v', 'crm', [[<ESC><CMD>lua require('jdtls').extract_method(true)<CR>]], opts)
+        -- vim.keymap.set('n', "crc", jdtls.extract_constant, opts)
+        -- local create_command = vim.api.nvim_buf_create_user_command
+        -- create_command(bufnr, 'W', require('me.lsp.ext').remove_unused_imports, {
+        --     nargs = 0,
+        -- })
+    end
 }
-require("jdtls").start_or_attach(config)
+jdtls.start_or_attach(jdtls_config)
+-- require('dap').configurations.java = {
+--     {
+--         type = "java",
+--         request = "attach",
+--         name = "Attach to Running App",
+--         hostName = "127.0.0.1",
+--         port = 1044,
+--     },
+-- }
+-- jdtls.setup_dap({ hotcodereplace = 'auto' })

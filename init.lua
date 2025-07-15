@@ -11,7 +11,7 @@ vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
 
 -- Basic settings
 vim.opt.number = true                              -- Line numbers
-vim.opt.relativenumber = false                     -- Relative line numbers
+vim.opt.relativenumber = true                      -- Relative line numbers
 vim.opt.cursorline = true                          -- Highlight current line
 vim.opt.wrap = false                               -- Don't wrap lines
 vim.opt.scrolloff = 10                             -- Keep 10 lines above/below cursor 
@@ -155,6 +155,7 @@ vim.keymap.set('i', '<C-p>', '<Up>', opts)
 vim.keymap.set('i', '<C-a>', '<Home>', opts)
 vim.keymap.set('i', '<M-m>', '<C-o>_', opts)
 vim.keymap.set('i', '<C-e>', '<End>', opts)
+vim.keymap.set('i', '<C-d>', '<Del>', opts)
 vim.keymap.set('i', '<M-Right>', '<C-o>w', opts)
 vim.keymap.set('i', '<M-f>', '<C-o>w', opts)
 vim.keymap.set('i', '<M-Left>', '<C-o>b', opts)
@@ -554,7 +555,7 @@ _G.file_type = file_type
 _G.file_size = file_size
 
 vim.cmd([[
-  highlight StatusLineBold gui=bold cterm=bold
+    highlight StatusLineBold gui=bold cterm=bold
 ]])
 
 -- Function to change statusline based on window focus
@@ -627,12 +628,12 @@ require("lazy").setup({
 -- LSP
 -- ============================================================================
 
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', 'gd',         vim.lsp.buf.definition, opts)
-vim.keymap.set('n', 'K',          vim.lsp.buf.hover, opts)
-vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-vim.keymap.set('n', 'gr',         vim.lsp.buf.references, opts)
-vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+local _opts = { noremap=true, silent=true }
+vim.keymap.set('n', 'gd',         vim.lsp.buf.definition, _opts)
+vim.keymap.set('n', 'K',          vim.lsp.buf.hover, _opts)
+vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, _opts)
+vim.keymap.set('n', 'gr',         vim.lsp.buf.references, _opts)
+vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, _opts)
 
 -- Lua
 vim.lsp.enable('luals')
@@ -654,7 +655,18 @@ vim.lsp.config['luals'] = {
         Lua = {
             runtime = {
                 version = 'LuaJIT',
-            }
+            },
+            diagnostics = {
+                globals = { 'vim' },
+            },
         }
-    }
+    },
 }
+
+vim.lsp.enable('markdown_oxide')
+vim.lsp.config['markdown_oxide'] = {
+    cmd = { "markdown-oxide" },
+    filetypes = { "markdown" },
+    root_markers = { ".git", ".obsidian", ".moxide.toml" },
+}
+

@@ -16,10 +16,28 @@ return {
         dependencies = { 'nvim-lua/plenary.nvim' },
         config = function()
             local builtin = require('telescope.builtin')
+            -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
             vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
             vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
             vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
             vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+            vim.keymap.set('n', '<leader>fm', builtin.marks, { desc = 'Lists vim marks and their value' })
+            vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = 'Lists LSP document symbols in the current buffer' })
+            vim.keymap.set('n', '<leader>fw', builtin.lsp_workspace_symbols, { desc = 'Lists LSP document symbols in the current workspace' })
+            -- vim.keymap.set('n', '<leader>fd', builtin.lsp_dynamic_workspace_symbols, { desc = 'Dynamically Lists LSP for all workspace symbols' })
+            vim.keymap.set('n', '<leader>fr', builtin.lsp_references, { desc = 'Lists LSP references for word under the cursor' })
+            vim.keymap.set('n', '<leader>fi', builtin.lsp_implementations, { desc = 'Goto the implementation of the word under the cursor if there\'s only one, otherwise show all options in Telescope' })
+            vim.keymap.set('n', '<leader>fd', builtin.lsp_definitions, { desc = 'Goto the definition of the word under the cursor, if there\'s only one, otherwise show all options in Telescope' })
+            vim.keymap.set('n', '<leader>ft', builtin.lsp_type_definitions, { desc = 'Goto the definition of the type of the word under the cursor, if there\'s only one, otherwise show all options in Telescope' })
+            vim.keymap.set('n', '<leader>fe', builtin.diagnostics, { desc = 'Lists Diagnostics for all open buffers or a specific buffer' })
+        end,
+    },
+
+    {
+        "echasnovski/mini.pairs",
+        event = "InsertEnter",
+        config = function()
+            require("mini.pairs").setup()
         end,
     },
 
@@ -94,6 +112,57 @@ return {
     {
 		"mfussenegger/nvim-jdtls",
         ft = { "java" },
+        dependencies = {
+            "mfussenegger/nvim-dap",
+        },
 	},
+
+    -- {
+    --     "rcarriga/nvim-dap-ui",
+    --     dependencies = {
+    --         "mfussenegger/nvim-dap",
+    --         "nvim-neotest/nvim-nio", -- 🆕 required for nvim-dap-ui
+    --     },
+    --     config = function()
+    --         require("dapui").setup()
+    --     end,
+    -- },
+
+    {
+        -- git clone https://github.com/microsoft/java-debug.git
+        "mfussenegger/nvim-dap", -- Debug Adapter Protocol client
+        dependencies = {
+            "nvim-neotest/nvim-nio", -- 🆕 required for nvim-dap-ui
+            "rcarriga/nvim-dap-ui", -- UI for DAP
+            "theHamsta/nvim-dap-virtual-text",
+        },
+        config = function()
+            local dap = require("dap")
+            local dapui = require("dapui")
+
+            -- Setup UI
+            dapui.setup()
+
+            -- Automatically open UI on debug start
+            dap.listeners.after.event_initialized["dapui_config"] = function()
+                dapui.open()
+            end
+            -- Close UI on debug end
+            dap.listeners.before.event_terminated["dapui_config"] = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited["dapui_config"] = function()
+                dapui.close()
+            end
+
+            -- Key mappings for common DAP actions
+            vim.keymap.set("n", "<F9>", dap.continue, { desc = "Continue Debugging" })
+            vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
+            vim.keymap.set("n", "<F7>", dap.step_into, { desc = "Step Into" })
+            vim.keymap.set("n", "<F11>", dap.step_out, { desc = "Step Out" })
+            vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+            vim.keymap.set("n", "<Leader>dr", dap.repl.open, { desc = "Open Debug REPL" })
+        end,
+    },
 
 }
