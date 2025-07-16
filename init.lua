@@ -4,7 +4,7 @@
 -- ================================================================================================
 
 -- theme & transparency
-vim.cmd.colorscheme("slate")
+-- vim.cmd.colorscheme("slate")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
@@ -108,19 +108,13 @@ vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
 
 -- Buffer navigation
-vim.keymap.set("n", "<leader>bn", ":bnext<CR>", { desc = "Next buffer" })
-vim.keymap.set("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous buffer" })
-vim.keymap.set("n", "<leader>bk", ":bd%<CR>", {desc = "Kill current buffer" })
-
--- Better window navigation
--- vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
--- vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
--- vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
--- vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+vim.keymap.set("n", "<leader>]", ":bnext<CR>", { desc = "Next buffer" })
+vim.keymap.set("n", "<leader>[", ":bprevious<CR>", { desc = "Previous buffer" })
+vim.keymap.set("n", "<leader>k", ":bd%<CR>", {desc = "Kill current buffer" })
 
 -- Splitting & Resizing
--- vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split window vertically" })
--- vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>|", ":vsplit<CR>", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>_", ":split<CR>", { desc = "Split window horizontally" })
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
@@ -385,13 +379,14 @@ local function CloseFloatingTerminal()
 end
 
 -- Key mappings
-vim.keymap.set("n", "<leader>t", FloatingTerminal, { noremap = true, silent = true, desc = "Toggle floating terminal" })
-vim.keymap.set("t", "<Esc>", function()
+local hide_term_window = function()
   if terminal_state.is_open then
     vim.api.nvim_win_close(terminal_state.win, false)
     terminal_state.is_open = false
   end
-end, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
+end
+vim.keymap.set("t", "<Esc>", hide_term_window, { noremap = true, silent = true, desc = "Close floating terminal from terminal mode" })
+vim.keymap.set("n", "<leader>`", FloatingTerminal, { noremap = true, silent = true, desc = "Toggle floating terminal" })
 
 -- ============================================================================
 -- TABS
@@ -405,71 +400,6 @@ vim.opt.tabline = ''     -- Use default tabline (empty string uses built-in)
 vim.cmd([[
   hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
 ]])
-
--- Alternative navigation (more intuitive)
-vim.keymap.set('n', '<leader>tn', ':tabnew<CR>', { desc = 'New tab' })
-vim.keymap.set('n', '<leader>tx', ':tabclose<CR>', { desc = 'Close tab' })
-
--- Tab moving
-vim.keymap.set('n', '<leader>tm', ':tabmove<CR>', { desc = 'Move tab' })
-vim.keymap.set('n', '<leader>t>', ':tabmove +1<CR>', { desc = 'Move tab right' })
-vim.keymap.set('n', '<leader>t<', ':tabmove -1<CR>', { desc = 'Move tab left' })
-
--- Function to open file in new tab
-local function open_file_in_tab()
-  vim.ui.input({ prompt = 'File to open in new tab: ', completion = 'file' }, function(input)
-    if input and input ~= '' then
-      vim.cmd('tabnew ' .. input)
-    end
-  end)
-end
-
--- Function to duplicate current tab
-local function duplicate_tab()
-  local current_file = vim.fn.expand('%:p')
-  if current_file ~= '' then
-    vim.cmd('tabnew ' .. current_file)
-  else
-    vim.cmd('tabnew')
-  end
-end
-
--- Function to close tabs to the right
-local function close_tabs_right()
-  local current_tab = vim.fn.tabpagenr()
-  local last_tab = vim.fn.tabpagenr('$')
-
-  for i = last_tab, current_tab + 1, -1 do
-    vim.cmd(i .. 'tabclose')
-  end
-end
-
--- Function to close tabs to the left
-local function close_tabs_left()
-  local current_tab = vim.fn.tabpagenr()
-
-  for i = current_tab - 1, 1, -1 do
-    vim.cmd('1tabclose')
-  end
-end
-
--- Enhanced keybindings
-vim.keymap.set('n', '<leader>tO', open_file_in_tab, { desc = 'Open file in new tab' })
-vim.keymap.set('n', '<leader>td', duplicate_tab, { desc = 'Duplicate current tab' })
-vim.keymap.set('n', '<leader>tr', close_tabs_right, { desc = 'Close tabs to the right' })
-vim.keymap.set('n', '<leader>tL', close_tabs_left, { desc = 'Close tabs to the left' })
-
--- Function to close buffer but keep tab if it's the only buffer in tab
-local function smart_close_buffer()
-  local buffers_in_tab = #vim.fn.tabpagebuflist()
-  if buffers_in_tab > 1 then
-    vim.cmd('bdelete')
-  else
-    -- If it's the only buffer in tab, close the tab
-    vim.cmd('tabclose')
-  end
-end
-vim.keymap.set('n', '<leader>bd', smart_close_buffer, { desc = 'Smart close buffer/tab' })
 
 -- ============================================================================
 -- STATUSLINE
@@ -504,16 +434,6 @@ local function file_type()
   end
 
   return (icons[ft] or ft)
-end
-
--- Word count for text files
-local function word_count()
-  local ft = vim.bo.filetype
-  if ft == "markdown" or ft == "text" or ft == "tex" then
-    local words = vim.fn.wordcount().words
-    return "  " .. words .. " words "
-  end
-  return ""
 end
 
 -- File size
@@ -639,19 +559,9 @@ vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, _opts)
 -- Lua
 vim.lsp.enable('luals')
 vim.lsp.config['luals'] = {
-    -- Command and arguments to start the server.
     cmd = { 'lua-language-server' },
-    -- Filetypes to automatically attach to.
     filetypes = { 'lua' },
-    -- Sets the "root directory" to the parent directory of the file in the
-    -- current buffer that contains either a ".luarc.json" or a
-    -- ".luarc.jsonc" file. Files that share a root directory will reuse
-    -- the connection to the same LSP server.
-    -- Nested lists indicate equal priority, see |vim.lsp.Config|.
     root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
-    -- Specific settings to send to the server. The schema for this is
-    -- defined by the server. For example the schema for lua-language-server
-    -- can be found here https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json
     settings = {
         Lua = {
             runtime = {
