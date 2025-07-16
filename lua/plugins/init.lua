@@ -42,26 +42,6 @@ return {
     },
 
     {
-        "vhyrro/luarocks.nvim",
-        priority = 1001, -- this plugin needs to run before anything else
-        opts = {
-            rocks = { "magick" },
-        },
-    },
-
-    {
-        "3rd/image.nvim",
-        dependencies = { "luarocks.nvim" },
-        config = function()
-            require("image").setup({
-                backend = "kitty", -- or "ueberzug"
-                max_height_window_percentage = 50,
-                hijack_file_patterns = { "*.png", "*.jpg", "*.jpeg", "*.gif", "*.webp", "*.svg" },
-            })
-        end
-    },
-
-    {
         "nvim-treesitter/nvim-treesitter",
         branch = 'master',
         lazy = false,
@@ -117,17 +97,6 @@ return {
         },
 	},
 
-    -- {
-    --     "rcarriga/nvim-dap-ui",
-    --     dependencies = {
-    --         "mfussenegger/nvim-dap",
-    --         "nvim-neotest/nvim-nio", -- 🆕 required for nvim-dap-ui
-    --     },
-    --     config = function()
-    --         require("dapui").setup()
-    --     end,
-    -- },
-
     {
         -- git clone https://github.com/microsoft/java-debug.git
         "mfussenegger/nvim-dap", -- Debug Adapter Protocol client
@@ -162,6 +131,24 @@ return {
             vim.keymap.set("n", "<F11>", dap.step_out, { desc = "Step Out" })
             vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
             vim.keymap.set("n", "<Leader>dr", dap.repl.open, { desc = "Open Debug REPL" })
+        end,
+    },
+
+    {
+        'akinsho/bufferline.nvim',
+        version = "*",
+        dependencies = 'nvim-tree/nvim-web-devicons',
+        config = function()
+            require('bufferline').setup({})
+        end,
+    },
+
+    {
+        'ggandor/leap.nvim',
+        version = "*",
+        dependencies = 'tpope/vim-repeat',
+        config = function()
+            require('leap').set_default_mappings()
         end,
     },
 
