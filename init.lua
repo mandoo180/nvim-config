@@ -557,6 +557,7 @@ vim.keymap.set('n', 'gr',         vim.lsp.buf.references, _opts)
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, _opts)
 
 -- Lua
+-- install lua-language-server
 vim.lsp.enable('luals')
 vim.lsp.config['luals'] = {
     cmd = { 'lua-language-server' },
@@ -574,6 +575,9 @@ vim.lsp.config['luals'] = {
     },
 }
 
+-- Markdown
+-- 1. install cargo using rustup
+-- 2. cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
 vim.lsp.enable('markdown_oxide')
 vim.lsp.config['markdown_oxide'] = {
     cmd = { "markdown-oxide" },
@@ -581,3 +585,70 @@ vim.lsp.config['markdown_oxide'] = {
     root_markers = { ".git", ".obsidian", ".moxide.toml" },
 }
 
+-- Python
+-- install python by running npm i -g pyright
+vim.lsp.enable('pyright')
+vim.lsp.config['pyright'] = {
+    cmd = { 'pyright-langserver', '--stdio' },
+    filetypes = { 'python' },
+    root_markers = { 'pyproject.toml', 'setup.py', 'setup.cfg', '.git' },
+    settings = {
+        python = {
+            analysis = {
+                typeCheckingMode = 'basic', -- or 'strict' for stricter checks
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+            }
+        }
+    },
+}
+
+-- Web
+-- npm i -g vscode-langservers-extracted
+-- Enable a single LSP for HTML, CSS, and JS/TS
+vim.lsp.enable('web')
+vim.lsp.config['web'] = {
+    cmd = { 'vscode-html-language-server', '--stdio' }, -- Start with HTML server
+    filetypes = { 'html' },
+    root_markers = { 'package.json', '.git', '.eslintrc', '.prettierrc' },
+    -- Optional: Extend settings if needed
+    settings = {
+        css = {
+            validate = true,
+        },
+        javascript = {
+            format = {
+                enable = true,
+            },
+        },
+        html = {
+            format = {
+                wrapLineLength = 120,
+                unformatted = "pre,code,textarea",
+            },
+        },
+    },
+}
+
+-- vim.lsp.enable('html')
+-- vim.lsp.config['html'] = {
+--     cmd = { 'vscode-html-language-server', '--stdio' },
+--     filetypes = { 'html' },
+--     root_markers = { '.git', 'package.json' },
+-- }
+
+vim.lsp.enable('css')
+vim.lsp.config['css'] = {
+    cmd = { 'vscode-css-language-server', '--stdio' },
+    filetypes = { 'css', 'scss', 'less' },
+    root_markers = { '.git', 'package.json' },
+}
+
+-- Typescript
+-- npm -i g typescript typescript-language-server
+vim.lsp.enable('tsserver')
+vim.lsp.config['tsserver'] = {
+    cmd = { 'typescript-language-server', '--stdio' },
+    filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+    root_markers = { 'package.json', 'tsconfig.json', '.git' },
+}
