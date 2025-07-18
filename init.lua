@@ -612,30 +612,28 @@ vim.lsp.config['web'] = {
     filetypes = { 'html' },
     root_markers = { 'package.json', '.git', '.eslintrc', '.prettierrc' },
     -- Optional: Extend settings if needed
+    init_options = {
+        provideFormatter = true,
+    },
     settings = {
         css = {
             validate = true,
         },
         javascript = {
+            validate = true,
             format = {
                 enable = true,
             },
         },
         html = {
             format = {
+                enable = true,
                 wrapLineLength = 120,
                 unformatted = "pre,code,textarea",
             },
         },
     },
 }
-
--- vim.lsp.enable('html')
--- vim.lsp.config['html'] = {
---     cmd = { 'vscode-html-language-server', '--stdio' },
---     filetypes = { 'html' },
---     root_markers = { '.git', 'package.json' },
--- }
 
 vim.lsp.enable('css')
 vim.lsp.config['css'] = {
@@ -652,3 +650,4 @@ vim.lsp.config['tsserver'] = {
     filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
     root_markers = { 'package.json', 'tsconfig.json', '.git' },
 }
+
