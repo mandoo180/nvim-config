@@ -17,36 +17,19 @@ return {
     config = function()
       local builtin = require("telescope.builtin")
       -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
-      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
-      vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-      vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
-      vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
-      vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Lists vim marks and their value" })
-      vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, {
-        desc = "Lists LSP document symbols in the current buffer"
-      })
-      vim.keymap.set("n", "<leader>fw", builtin.lsp_workspace_symbols, {
-        desc = "Lists LSP document symbols in the current workspace"
-      })
-      -- vim.keymap.set('n', '<leader>fd', builtin.lsp_dynamic_workspace_symbols, { desc = 'Dynamically Lists LSP for all workspace symbols' })
-      vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {
-        desc = "Lists LSP references for word under the cursor"
-      })
-      vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, {
-        desc =
-        "Goto the implementation of the word under the cursor if there's only one, otherwise show all options in Telescope",
-      })
-      vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, {
-        desc =
-        "Goto the definition of the word under the cursor, if there's only one, otherwise show all options in Telescope",
-      })
-      vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, {
-        desc =
-        "Goto the definition of the type of the word under the cursor, if there's only one, otherwise show all options in Telescope",
-      })
-      vim.keymap.set("n", "<leader>fe", builtin.diagnostics, {
-        desc = "Lists Diagnostics for all open buffers or a specific buffer"
-      })
+      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find grep" })
+      vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
+      vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Find marks" })
+      vim.keymap.set("n", "<leader>fp", builtin.registers, { desc = "Find registers" })
+      vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find symbols" })
+      vim.keymap.set("n", "<leader>fw", builtin.lsp_workspace_symbols, { desc = "Find workspace's symbols" })
+      vim.keymap.set("n", "<leader>fr", builtin.lsp_references, { desc = "Find references" })
+      vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, { desc = "Find implementations", })
+      vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, { desc = "Find definitions", })
+      vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, { desc = "Find type definitions", })
+      vim.keymap.set("n", "<leader>fe", builtin.diagnostics, { desc = "Find errors(diagnostics)" })
     end,
   },
 
