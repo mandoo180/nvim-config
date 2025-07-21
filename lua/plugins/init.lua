@@ -1,161 +1,181 @@
 return {
 
-    {
-        "folke/tokyonight.nvim",
-        lazy = false, -- make sure we load this during startup if it is your main colorscheme
-        priority = 1000, -- make sure to load this before all the other start plugins
-        config = function()
-          -- load the colorscheme here
-          vim.cmd([[colorscheme tokyonight]])
-        end,
-    },
+  {
+    "folke/tokyonight.nvim",
+    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      -- load the colorscheme here
+      vim.cmd([[colorscheme tokyonight]])
+    end,
+  },
 
-    {
-        'nvim-telescope/telescope.nvim',
-        tag = '0.1.8', -- or, branch = '0.1.x',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        config = function()
-            local builtin = require('telescope.builtin')
-            -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
-            vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
-            vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
-            vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-            vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
-            vim.keymap.set('n', '<leader>fm', builtin.marks, { desc = 'Lists vim marks and their value' })
-            vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = 'Lists LSP document symbols in the current buffer' })
-            vim.keymap.set('n', '<leader>fw', builtin.lsp_workspace_symbols, { desc = 'Lists LSP document symbols in the current workspace' })
-            -- vim.keymap.set('n', '<leader>fd', builtin.lsp_dynamic_workspace_symbols, { desc = 'Dynamically Lists LSP for all workspace symbols' })
-            vim.keymap.set('n', '<leader>fr', builtin.lsp_references, { desc = 'Lists LSP references for word under the cursor' })
-            vim.keymap.set('n', '<leader>fi', builtin.lsp_implementations, { desc = 'Goto the implementation of the word under the cursor if there\'s only one, otherwise show all options in Telescope' })
-            vim.keymap.set('n', '<leader>fd', builtin.lsp_definitions, { desc = 'Goto the definition of the word under the cursor, if there\'s only one, otherwise show all options in Telescope' })
-            vim.keymap.set('n', '<leader>ft', builtin.lsp_type_definitions, { desc = 'Goto the definition of the type of the word under the cursor, if there\'s only one, otherwise show all options in Telescope' })
-            vim.keymap.set('n', '<leader>fe', builtin.diagnostics, { desc = 'Lists Diagnostics for all open buffers or a specific buffer' })
-        end,
-    },
+  {
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.8", -- or, branch = '0.1.x',
+    dependencies = { "nvim-lua/plenary.nvim" },
+    config = function()
+      local builtin = require("telescope.builtin")
+      -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
+      vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+      vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+      vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+      vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+      vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Lists vim marks and their value" })
+      vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, {
+        desc = "Lists LSP document symbols in the current buffer"
+      })
+      vim.keymap.set("n", "<leader>fw", builtin.lsp_workspace_symbols, {
+        desc = "Lists LSP document symbols in the current workspace"
+      })
+      -- vim.keymap.set('n', '<leader>fd', builtin.lsp_dynamic_workspace_symbols, { desc = 'Dynamically Lists LSP for all workspace symbols' })
+      vim.keymap.set("n", "<leader>fr", builtin.lsp_references, {
+        desc = "Lists LSP references for word under the cursor"
+      })
+      vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, {
+        desc =
+        "Goto the implementation of the word under the cursor if there's only one, otherwise show all options in Telescope",
+      })
+      vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, {
+        desc =
+        "Goto the definition of the word under the cursor, if there's only one, otherwise show all options in Telescope",
+      })
+      vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, {
+        desc =
+        "Goto the definition of the type of the word under the cursor, if there's only one, otherwise show all options in Telescope",
+      })
+      vim.keymap.set("n", "<leader>fe", builtin.diagnostics, {
+        desc = "Lists Diagnostics for all open buffers or a specific buffer"
+      })
+    end,
+  },
 
-    {
-        "echasnovski/mini.pairs",
-        event = "InsertEnter",
-        config = function()
-            require("mini.pairs").setup()
-        end,
-    },
+  {
+    "echasnovski/mini.pairs",
+    event = "InsertEnter",
+    config = function()
+      require("mini.pairs").setup()
+    end,
+  },
 
-    {
-        "nvim-treesitter/nvim-treesitter",
-        branch = 'master',
-        lazy = false,
-        build = ":TSUpdate",
-        config = function()
-            require'nvim-treesitter.configs'.setup {
-                -- A list of parser names, or "all" (the listed parsers MUST always be installed)
-                ensure_installed = { "html", "css", "javascript", "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "java" },
-
-                -- Install parsers synchronously (only applied to `ensure_installed`)
-                sync_install = false,
-
-                -- Automatically install missing parsers when entering buffer
-                -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-                auto_install = true,
-
-                -- List of parsers to ignore installing (or "all")
-                -- ignore_install = { "javascript" },
-
-                ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-                -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-
-                highlight = {
-                    enable = true,
-                    -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-                    -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-                    -- the name of the parser)
-                    -- list of language that will be disabled
-                    -- disable = { "c", "rust" },
-                    -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-                    disable = function(lang, buf)
-                        local max_filesize = 100 * 1024 -- 100 KB
-                        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                        if ok and stats and stats.size > max_filesize then
-                            return true
-                        end
-                    end,
-                    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-                    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-                    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-                    -- Instead of true it can also be a list of languages
-                    additional_vim_regex_highlighting = false,
-                },
-            }
-        end,
-    },
-
-    {
-		"mfussenegger/nvim-jdtls",
-        ft = { "java" },
-        dependencies = {
-            "mfussenegger/nvim-dap",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "master",
+    lazy = false,
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        -- A list of parser names, or "all" (the listed parsers MUST always be installed)
+        ensure_installed = {
+          "html",
+          "css",
+          "javascript",
+          "c",
+          "lua",
+          "vim",
+          "vimdoc",
+          "query",
+          "markdown",
+          "markdown_inline",
+          "java",
         },
-	},
-
-    {
-        -- git clone https://github.com/microsoft/java-debug.git
-        "mfussenegger/nvim-dap", -- Debug Adapter Protocol client
-        dependencies = {
-            "nvim-neotest/nvim-nio", -- 🆕 required for nvim-dap-ui
-            "rcarriga/nvim-dap-ui", -- UI for DAP
-            "theHamsta/nvim-dap-virtual-text",
+        -- Install parsers synchronously (only applied to `ensure_installed`)
+        sync_install = false,
+        -- Automatically install missing parsers when entering buffer
+        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+        auto_install = true,
+        -- List of parsers to ignore installing (or "all")
+        -- ignore_install = { "javascript" },
+        ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
+        -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
+        highlight = {
+          enable = true,
+          -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
+          -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
+          -- the name of the parser)
+          -- list of language that will be disabled
+          -- disable = { "c", "rust" },
+          -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
+          disable = function(lang, buf)
+            local max_filesize = 100 * 1024 -- 100 KB
+            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            if ok and stats and stats.size > max_filesize then
+              return true
+            end
+          end,
+          -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+          -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+          -- Using this option may slow down your editor, and you may see some duplicate highlights.
+          -- Instead of true it can also be a list of languages
+          additional_vim_regex_highlighting = false,
         },
-        config = function()
-            local dap = require("dap")
-            local dapui = require("dapui")
+      })
+    end,
+  },
 
-            -- Setup UI
-            dapui.setup()
-
-            -- Automatically open UI on debug start
-            dap.listeners.after.event_initialized["dapui_config"] = function()
-                dapui.open()
-            end
-            -- Close UI on debug end
-            dap.listeners.before.event_terminated["dapui_config"] = function()
-                dapui.close()
-            end
-            dap.listeners.before.event_exited["dapui_config"] = function()
-                dapui.close()
-            end
-
-            -- Key mappings for common DAP actions
-            vim.keymap.set("n", "<F9>", dap.continue, { desc = "Continue Debugging" })
-            vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
-            vim.keymap.set("n", "<F7>", dap.step_into, { desc = "Step Into" })
-            vim.keymap.set("n", "<F11>", dap.step_out, { desc = "Step Out" })
-            vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-            vim.keymap.set("n", "<Leader>dr", dap.repl.open, { desc = "Open Debug REPL" })
-        end,
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = { "java" },
+    dependencies = {
+      "mfussenegger/nvim-dap",
     },
+  },
 
-    {
-        'akinsho/bufferline.nvim',
-        version = "*",
-        dependencies = 'nvim-tree/nvim-web-devicons',
-        config = function()
-            require('bufferline').setup({})
-        end,
+  {
+    -- git clone https://github.com/microsoft/java-debug.git
+    "mfussenegger/nvim-dap",   -- Debug Adapter Protocol client
+    dependencies = {
+      "nvim-neotest/nvim-nio", -- 🆕 required for nvim-dap-ui
+      "rcarriga/nvim-dap-ui",  -- UI for DAP
+      "theHamsta/nvim-dap-virtual-text",
     },
+    config = function()
+      local dap = require("dap")
+      local dapui = require("dapui")
+      -- Setup UI
+      dapui.setup()
+      -- Automatically open UI on debug start
+      dap.listeners.after.event_initialized["dapui_config"] = function()
+        dapui.open()
+      end
+      -- Close UI on debug end
+      dap.listeners.before.event_terminated["dapui_config"] = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited["dapui_config"] = function()
+        dapui.close()
+      end
+      -- Key mappings for common DAP actions
+      vim.keymap.set("n", "<F9>", dap.continue, { desc = "Continue Debugging" })
+      vim.keymap.set("n", "<F8>", dap.step_over, { desc = "Step Over" })
+      vim.keymap.set("n", "<F7>", dap.step_into, { desc = "Step Into" })
+      vim.keymap.set("n", "<F11>", dap.step_out, { desc = "Step Out" })
+      vim.keymap.set("n", "<Leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+      vim.keymap.set("n", "<Leader>dr", dap.repl.open, { desc = "Open Debug REPL" })
+    end,
+  },
 
-    {
-        'ggandor/leap.nvim',
-        version = "*",
-        dependencies = 'tpope/vim-repeat',
-        config = function()
-            require('leap').set_default_mappings()
-        end,
-    },
+  {
+    "akinsho/bufferline.nvim",
+    version = "*",
+    dependencies = "nvim-tree/nvim-web-devicons",
+    config = function()
+      require("bufferline").setup({})
+    end,
+  },
 
-    {
-        -- https://raw.githubusercontent.com/mattn/emmet-vim/master/TUTORIAL
-        "mattn/emmet-vim",
-        ft = { "html", "css", "htmldjango", "javascriptreact", "typescriptreact" },
-    },
+  {
+    "ggandor/leap.nvim",
+    version = "*",
+    dependencies = "tpope/vim-repeat",
+    config = function()
+      require("leap").set_default_mappings()
+    end,
+  },
 
+  {
+    -- https://raw.githubusercontent.com/mattn/emmet-vim/master/TUTORIAL
+    "mattn/emmet-vim",
+    ft = { "html", "css", "htmldjango", "javascriptreact", "typescriptreact" },
+  },
 }

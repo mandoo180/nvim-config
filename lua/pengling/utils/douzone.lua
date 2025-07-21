@@ -25,6 +25,12 @@ local dews_repo = os.getenv("HOME") .. "/Projects/douzone-comet-webapp-boot/dews
 local dews_html = dews_repo .. "/html/HR"
 local dews_js = dews_repo .. "/js/HR"
 local dews_css = dews_repo .. "/css/HR"
-vim.keymap.set("n", "<leader>ch", function() copy_file_to_dir(dews_html) end, { desc = "Copy current file to dews html directory." })
-vim.keymap.set("n", "<leader>cj", function() copy_file_to_dir(dews_js) end, { desc = "Copy current file to dews js directory." })
-vim.keymap.set("n", "<leader>cc", function() copy_file_to_dir(dews_css) end, { desc = "Copy current file to dews css directory." })
+vim.keymap.set("n", "<leader>ch", function()
+  copy_file_to_dir(dews_html)
+end, { desc = "Copy current file to dews html directory." })
+vim.keymap.set("n", "<leader>cj", function()
+  copy_file_to_dir(dews_js)
+end, { desc = "Copy current file to dews js directory." })
+vim.keymap.set("n", "<leader>cc", function()
+  copy_file_to_dir(dews_css)
+end, { desc = "Copy current file to dews css directory." })
