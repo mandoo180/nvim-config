@@ -600,6 +600,11 @@ vim.lsp.config["markdown_oxide"] = {
   cmd = { "markdown-oxide" },
   filetypes = { "markdown" },
   root_markers = { ".git", ".obsidian", ".moxide.toml" },
+  on_attach = function(client, bufnr)
+    vim.api.nvim_buf_create_user_command(bufnr, "MarkdownPreview", function()
+      vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. vim.api.nvim_buf_get_name(bufnr) .. "' > /dev/null &")
+    end, { desc = "Preview a markdown file." })
+  end,
 }
 
 -- Python
