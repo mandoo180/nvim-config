@@ -16,6 +16,10 @@ sudo pacman -Suy lua-language-server
 sudo pacman -Suy rustup # if cargo is not installed
 rustup default stable
 cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
+
+# or just ust AUR
+paru -S markdown-oxide-git
+yay -S markdown-oxide-git
 ```
 
 ### Web

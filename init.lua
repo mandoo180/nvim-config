@@ -74,8 +74,14 @@ vim.opt.modifiable = true               -- Allow buffer modifications
 vim.opt.encoding = "UTF-8"              -- Set encoding
 
 -- Cursor settings
-vim.opt.guicursor =
-"n-v-c:block,i-ci-ve:block,r-cr:hor20,o:hor50,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,sm:block-blinkwait175-blinkoff150-blinkon175"
+vim.opt.guicursor = {
+  "n-v-c:block",
+  "i-ci-ve:ver25",
+  "r-cr:hor25",
+  "o:hor25",
+  "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
+  "sm:block-blinkwait175-blinkoff150-blinkon175",
+}
 
 -- Folding settings
 vim.opt.foldmethod = "expr"                     -- Use expression for folding
@@ -602,7 +608,8 @@ vim.lsp.config["markdown_oxide"] = {
   root_markers = { ".git", ".obsidian", ".moxide.toml" },
   on_attach = function(client, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, "MarkdownPreview", function()
-      vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. vim.api.nvim_buf_get_name(bufnr) .. "' > /dev/null &")
+      local bufnm = vim.api.nvim_buf_get_name(bufnr)
+      vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. bufnm .. "' > /dev/null &")
     end, { desc = "Preview a markdown file." })
   end,
 }
