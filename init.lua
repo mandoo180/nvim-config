@@ -233,7 +233,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
-  pattern = { "lua", "javascript", "typescript", "json", "html", "css" },
+  pattern = { "lua", "javascript", "typescript", "json", "html", "htmldjango", "css" },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
