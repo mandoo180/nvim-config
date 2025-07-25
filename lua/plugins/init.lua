@@ -15,6 +15,19 @@ return {
     tag = "0.1.8", -- or, branch = '0.1.x',
     dependencies = { "nvim-lua/plenary.nvim" },
     config = function()
+      local telescope = require("telescope")
+      telescope.setup {
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-g>"] = require("telescope.actions").close,
+            },
+            n = {
+              ["<C-g>"] = require("telescope.actions").close,
+            },
+          },
+        },
+      }
       local builtin = require("telescope.builtin")
       -- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
@@ -30,6 +43,7 @@ return {
       vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, { desc = "Find definitions", })
       vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, { desc = "Find type definitions", })
       vim.keymap.set("n", "<leader>fe", builtin.diagnostics, { desc = "Find errors(diagnostics)" })
+      vim.keymap.set("n", "<leader><space><space>", builtin.commands, { desc = "Find commands" })
     end,
   },
 

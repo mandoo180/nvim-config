@@ -149,6 +149,9 @@ vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Ed
 
 -- Motions in insert mode
 local opts = { noremap = true, silent = true }
+vim.keymap.set("n", "<C-g>", "<ESC>", opts)
+vim.keymap.set("v", "<C-g>", "<ESC>", opts)
+
 vim.keymap.set("i", "jj", "<ESC>", opts)
 vim.keymap.set("i", "<C-f>", "<Right>", opts)
 vim.keymap.set("i", "<C-b>", "<Left>", opts)
@@ -165,6 +168,7 @@ vim.keymap.set("i", "<M-b>", "<C-o>b", opts)
 vim.keymap.set("i", "<M-BS>", "<C-o>db", opts)
 vim.keymap.set("i", "<M-DEL>", "<C-o>dw", opts)
 vim.keymap.set("i", "<M-d>", "<C-o>dw", opts)
+vim.keymap.set("i", "<C-g>", "<ESC>", opts)
 
 -- Motions in minibuffer
 vim.keymap.set("c", "<C-f>", "<Right>")
@@ -638,7 +642,7 @@ vim.lsp.config["pyright"] = {
 vim.lsp.enable("web")
 vim.lsp.config["web"] = {
   cmd = { "vscode-html-language-server", "--stdio" }, -- Start with HTML server
-  filetypes = { "html" },
+  filetypes = { "html", "htmldjango" },
   root_markers = { "package.json", ".git", ".eslintrc", ".prettierrc" },
   -- Optional: Extend settings if needed
   init_options = {
