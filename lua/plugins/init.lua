@@ -173,6 +173,6 @@ return {
   {
     -- https://raw.githubusercontent.com/mattn/emmet-vim/master/TUTORIAL
     "mattn/emmet-vim",
-    ft = { "html", "css", "htmldjango", "javascriptreact", "typescriptreact" },
+    ft = { "html", "css", "htmldjango", "eruby", "javascriptreact", "typescriptreact" },
   },
 }

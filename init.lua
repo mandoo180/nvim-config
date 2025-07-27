@@ -642,7 +642,7 @@ vim.lsp.config["pyright"] = {
 vim.lsp.enable("web")
 vim.lsp.config["web"] = {
   cmd = { "vscode-html-language-server", "--stdio" }, -- Start with HTML server
-  filetypes = { "html", "htmldjango" },
+  filetypes = { "html", "htmldjango", "eruby" },
   root_markers = { "package.json", ".git", ".eslintrc", ".prettierrc" },
   -- Optional: Extend settings if needed
   init_options = {
