@@ -1,4 +1,15 @@
 return {
+  -- Using Lazy
+  {
+    "navarasu/onedark.nvim",
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function()
+      require('onedark').setup {
+        style = 'darker'
+      }
+      require('onedark').load()
+    end
+  },
 
   {
     "folke/tokyonight.nvim",
@@ -6,7 +17,7 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       -- load the colorscheme here
-      vim.cmd([[colorscheme tokyonight]])
+      -- vim.cmd([[colorscheme tokyonight]])
     end,
   },
 
@@ -174,5 +185,19 @@ return {
     -- https://raw.githubusercontent.com/mattn/emmet-vim/master/TUTORIAL
     "mattn/emmet-vim",
     ft = { "html", "css", "htmldjango", "eruby", "javascriptreact", "typescriptreact" },
+  },
+
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons", -- optional, but recommended
+    },
+    lazy = false,                    -- neo-tree will lazily load itself
+    config = function()
+      vim.keymap.set("n", "<leader>e", "<Cmd>Neotree toggle<CR>")
+    end,
   },
 }

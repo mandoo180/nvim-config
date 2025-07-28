@@ -138,7 +138,7 @@ vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
 -- Quick file navigation
-vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
+-- vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
 
 -- Better J behavior
@@ -233,7 +233,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup,
-  pattern = { "lua", "javascript", "typescript", "json", "html", "htmldjango", "css" },
+  pattern = { "lua", "javascript", "typescript", "json", "html", "htmldjango", "eruby", "css" },
   callback = function()
     vim.opt_local.tabstop = 2
     vim.opt_local.shiftwidth = 2
