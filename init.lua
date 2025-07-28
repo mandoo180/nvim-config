@@ -684,6 +684,20 @@ vim.lsp.config["tsserver"] = {
   root_markers = { "package.json", "tsconfig.json", ".git" },
 }
 
+-- Ruby
+-- gem install ruby-lsp 
+-- https://shopify.github.io/ruby-lsp/editors.html#neovim
+vim.lsp.enable("ruby_lsp")
+vim.lsp.config["ruby_lsp"] = {
+  cmd = { "ruby-lsp" },
+  filetypes = { "ruby" },
+  root_markers = { ".git", "Gemfile", "Rakefile", "Dockerfile" },
+  init_options = {
+    formatter = "standard",
+    linters = { "standard" },
+  },
+}
+
 -- ============================================================================
 -- Imports
 -- ============================================================================

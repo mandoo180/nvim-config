@@ -86,6 +86,7 @@ return {
           "markdown",
           "markdown_inline",
           "java",
+          "ruby",
         },
         -- Install parsers synchronously (only applied to `ensure_installed`)
         sync_install = false,
