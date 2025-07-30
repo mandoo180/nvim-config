@@ -72,7 +72,7 @@ local jdtls_config = {
       "/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar",
     },
   },
-  on_attach = function(client, bufnr)
+  on_attach = function(_, bufnr)
     -- require('me.lsp.conf').on_attach(client, bufnr, {
     --     server_side_fuzzy_completion = true,
     -- })
