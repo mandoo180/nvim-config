@@ -96,6 +96,9 @@ vim.opt.splitright = true -- Vertical splits go right
 vim.g.mapleader = " "      -- Set leader key to space
 vim.g.maplocalleader = " " -- Set local leader key (NEW)
 
+-- Looks
+vim.o.winborder = "rounded"
+
 -- Normal mode mappings
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
@@ -572,13 +575,13 @@ require("lazy").setup({
 -- LSP
 -- ============================================================================
 
-local _opts = { noremap = true, silent = true }
-vim.keymap.set("n", "gd", vim.lsp.buf.definition, _opts)
-vim.keymap.set("n", "K", vim.lsp.buf.hover, _opts)
-vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, _opts)
-vim.keymap.set("n", "gr", vim.lsp.buf.references, _opts)
-vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, _opts)
-vim.keymap.set("n", "<leader>fl", vim.lsp.buf.format, _opts)
+-- :h lsp-quickstart for more info for LSP
+
+vim.keymap.set('n', '<Leader><Tab>', vim.lsp.buf.format)
+vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get)
+vim.diagnostic.config({
+  virtual_text = { current_line = true }
+})
 
 -- Lua
 -- install lua-language-server
@@ -610,7 +613,7 @@ vim.lsp.config["markdown_oxide"] = {
   cmd = { "markdown-oxide" },
   filetypes = { "markdown" },
   root_markers = { ".git", ".obsidian", ".moxide.toml" },
-  on_attach = function(client, bufnr)
+  on_attach = function(_, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, "MarkdownPreview", function()
       local bufnm = vim.api.nvim_buf_get_name(bufnr)
       vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. bufnm .. "' > /dev/null &")
@@ -685,7 +688,7 @@ vim.lsp.config["tsserver"] = {
 }
 
 -- Ruby
--- gem install ruby-lsp 
+-- gem install ruby-lsp
 -- https://shopify.github.io/ruby-lsp/editors.html#neovim
 vim.lsp.enable("ruby_lsp")
 vim.lsp.config["ruby_lsp"] = {
@@ -695,8 +698,22 @@ vim.lsp.config["ruby_lsp"] = {
   init_options = {
     formatter = "standard",
     linters = { "standard" },
+    addonSettings = {
+      ["Ruby LSP Rails"] = {
+        enablePendingMigrationsPrompt = false,
+      },
+    },
   },
 }
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(ev)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+  end,
+})
 
 -- ============================================================================
 -- Imports

@@ -44,6 +44,7 @@ return {
       vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
       vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find grep" })
       vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+      vim.keymap.set("n", "<leader>bb", builtin.buffers, { desc = "Find buffers" })
       vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
       vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Find marks" })
       vim.keymap.set("n", "<leader>fp", builtin.registers, { desc = "Find registers" })
@@ -54,7 +55,7 @@ return {
       vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, { desc = "Find definitions", })
       vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, { desc = "Find type definitions", })
       vim.keymap.set("n", "<leader>fe", builtin.diagnostics, { desc = "Find errors(diagnostics)" })
-      vim.keymap.set("n", "<leader><space><space>", builtin.commands, { desc = "Find commands" })
+      vim.keymap.set("n", "<leader>fc", builtin.commands, { desc = "Find commands" })
     end,
   },
 
