@@ -22,6 +22,14 @@ return {
   },
 
   {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require 'lualine'.setup {}
+    end,
+  },
+
+  {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8", -- or, branch = '0.1.x',
     dependencies = { "nvim-lua/plenary.nvim" },
@@ -134,7 +142,7 @@ return {
         textobjects = {
           select = {
             enable = true,
-            lookahead = true,           -- automatically jump forward to textobj
+            lookahead = true,             -- automatically jump forward to textobj
             keymaps = {
               ["af"] = "@function.outer", -- around function
               ["if"] = "@function.inner", -- inside function
