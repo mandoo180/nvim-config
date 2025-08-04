@@ -1,5 +1,5 @@
 return {
-  -- Using Lazy
+
   {
     "navarasu/onedark.nvim",
     priority = 1000, -- make sure to load this before all the other start plugins
@@ -9,16 +9,6 @@ return {
       }
       require('onedark').load()
     end
-  },
-
-  {
-    "folke/tokyonight.nvim",
-    lazy = false,    -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function()
-      -- load the colorscheme here
-      -- vim.cmd([[colorscheme tokyonight]])
-    end,
   },
 
   {
@@ -84,24 +74,58 @@ return {
       require("nvim-treesitter.configs").setup({
         -- A list of parser names, or "all" (the listed parsers MUST always be installed)
         ensure_installed = {
-          "html",
-          "css",
-          "javascript",
+          "awk",
           "c",
+          "clojure",
+          "css",
+          "csv",
+          "desktop",
+          "diff",
+          "dockerfile",
+          "git_config",
+          "gitcommit",
+          "gitignore",
+          "go",
+          "html",
+          "htmldjango",
+          "http",
+          "ini",
+          "java",
+          "javascript",
+          "jinja_inline",
+          "jinja",
+          "jq",
+          "json",
+          "kdl",
           "lua",
+          "make",
+          "markdown_inline",
+          "markdown",
+          "nginx",
+          "perl",
+          "python",
+          "query",
+          "ruby",
+          "rust",
+          "scheme",
+          "sql",
+          "ssh_config",
+          "tmux",
+          "toml",
+          "tsv",
+          "tsx",
+          "typescript",
+          "vim",
           "vim",
           "vimdoc",
-          "query",
-          "markdown",
-          "markdown_inline",
-          "java",
-          "ruby",
+          "xml",
+          "yaml",
         },
         -- Install parsers synchronously (only applied to `ensure_installed`)
         sync_install = false,
         -- Automatically install missing parsers when entering buffer
         -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-        auto_install = true,
+        auto_install = false,
         -- List of parsers to ignore installing (or "all")
         -- ignore_install = { "javascript" },
         ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
