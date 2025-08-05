@@ -430,39 +430,235 @@ vim.cmd([[
 -- PLUGINS
 -- ============================================================================
 
--- Bootstrap lazy.nvim
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-  if vim.v.shell_error ~= 0 then
-    vim.api.nvim_echo({
-      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out,                            "WarningMsg" },
-      { "\nPress any key to exit..." },
-    }, true, {})
-    vim.fn.getchar()
-    os.exit(1)
-  end
-end
-vim.opt.rtp:prepend(lazypath)
+vim.pack.add {
+  { src = "https://github.com/nvim-lua/plenary.nvim" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim" },
 
--- Setup lazy.nvim
-require("lazy").setup({
-  spec = {
-    -- import your plugins
-    { import = "plugins" },
+  { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+  { src = "https://github.com/MunifTanjim/nui.nvim" },
+  { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
+  { src = "https://github.com/akinsho/bufferline.nvim" },
+  { src = "https://github.com/nvim-lualine/lualine.nvim" },
+
+  { src = "https://github.com/nvim-neotest/nvim-nio" },
+  { src = "https://github.com/rcarriga/nvim-dap-ui" },
+  { src = "https://github.com/theHamsta/nvim-dap-virtual-text" },
+  { src = "https://github.com/mfussenegger/nvim-dap" },
+
+  { src = "https://github.com/mfussenegger/nvim-jdtls" },
+
+  { src = "https://github.com/navarasu/onedark.nvim" },
+
+  { src = "https://github.com/echasnovski/mini.pairs" },
+
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
+
+  { src = "https://github.com/mattn/emmet-vim" },
+
+  { src = "https://github.com/tpope/vim-repeat" },
+  { src = "https://github.com/ggandor/leap.nvim" },
+
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path" },
+  { src = "https://github.com/L3MON4D3/LuaSnip" },
+  { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+  { src = "https://github.com/hrsh7th/nvim-cmp" },
+  { src = "https://github.com/rafamadriz/friendly-snippets" },
+
+}
+
+-- ETC
+require "onedark".setup { style = "darker" }
+require "onedark".load()
+require "lualine".setup {}
+require "mini.pairs".setup {}
+require "bufferline".setup {}
+require "leap".set_default_mappings()
+
+-- NeoTree
+vim.keymap.set("n", "<leader>e", "<Cmd>Neotree toggle<CR>")
+vim.keymap.set("n", "<leader>1", "<Cmd>Neotree reveal<CR>")
+
+local telescope = require("telescope")
+telescope.setup {
+  defaults = {
+    mappings = {
+      i = {
+        ["<C-g>"] = require("telescope.actions").close,
+      },
+      n = {
+        ["<C-g>"] = require("telescope.actions").close,
+      },
+    },
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
-  install = { colorscheme = { "habamax" } },
-  -- automatically check for plugin updates
-  checker = { enabled = false },
-  change_detection = {
-    enabled = false,
-    notify = false,
+}
+
+local builtin = require("telescope.builtin")
+-- https://github.com/nvim-telescope/telescope.nvim?tab=readme-ov-file#neovim-lsp-pickers
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find grep" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+vim.keymap.set("n", "<leader>bb", builtin.buffers, { desc = "Find buffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
+vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Find marks" })
+vim.keymap.set("n", "<leader>fp", builtin.registers, { desc = "Find registers" })
+vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find symbols" })
+vim.keymap.set("n", "<leader>fw", builtin.lsp_workspace_symbols, { desc = "Find workspace's symbols" })
+vim.keymap.set("n", "<leader>fr", builtin.lsp_references, { desc = "Find references" })
+vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, { desc = "Find implementations", })
+vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, { desc = "Find definitions", })
+vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, { desc = "Find type definitions", })
+vim.keymap.set("n", "<leader>fe", builtin.diagnostics, { desc = "Find errors(diagnostics)" })
+vim.keymap.set("n", "<leader>fc", builtin.commands, { desc = "Find commands" })
+
+require("nvim-treesitter.configs").setup({
+  ensure_installed = {
+    "awk",
+    "c",
+    "clojure",
+    "css",
+    "csv",
+    "desktop",
+    "diff",
+    "dockerfile",
+    "git_config",
+    "gitcommit",
+    "gitignore",
+    "go",
+    "html",
+    "htmldjango",
+    "http",
+    "ini",
+    "java",
+    "javascript",
+    "jinja_inline",
+    "jinja",
+    "jq",
+    "json",
+    "kdl",
+    "lua",
+    "make",
+    "markdown_inline",
+    "markdown",
+    "nginx",
+    "perl",
+    "python",
+    "query",
+    "ruby",
+    "rust",
+    "scheme",
+    "sql",
+    "ssh_config",
+    "tmux",
+    "toml",
+    "tsv",
+    "tsx",
+    "typescript",
+    "vim",
+    "vim",
+    "vimdoc",
+    "xml",
+    "yaml",
+  },
+  sync_install = false,
+  auto_install = false,
+  highlight = {
+    enable = true,
+    disable = function(_, buf)
+      local max_filesize = 100 * 1024 -- 100 KB
+      local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+      if ok and stats and stats.size > max_filesize then
+        return true
+      end
+    end,
+    additional_vim_regex_highlighting = false,
+  },
+  indent = {
+    enable = true,
+  },
+})
+
+require "nvim-treesitter.configs".setup {
+  textobjects = {
+    select = {
+      enable = true,
+      lookahead = true,             -- automatically jump forward to textobj
+      keymaps = {
+        ["af"] = "@function.outer", -- around function
+        ["if"] = "@function.inner", -- inside function
+        ["ac"] = "@class.outer",
+        ["ic"] = "@class.inner",
+      },
+    },
+  },
+}
+
+local cmp = require "cmp"
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      require("luasnip").lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.confirm({ select = true }) -- Accept current / first suggestion
+      elseif require("luasnip").expand_or_jumpable() then
+        require("luasnip").expand_or_jump()
+      else
+        fallback() -- Normal tab behavior
+      end
+    end, { "i", "s" }),
+  }),
+  sources = cmp.config.sources({
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+    { name = "buffer" },
+    { name = "path" },
+  }),
+  completion = {
+    completeopt = "menu,menuone,noinsert"
   }
 })
+
+require "luasnip.loaders.from_vscode".lazy_load()
+
+-- Bootstrap lazy.nvim
+-- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- if not (vim.uv or vim.loop).fs_stat(lazypath) then
+--   local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+--   local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+--   if vim.v.shell_error ~= 0 then
+--     vim.api.nvim_echo({
+--       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+--       { out,                            "WarningMsg" },
+--       { "\nPress any key to exit..." },
+--     }, true, {})
+--     vim.fn.getchar()
+--     os.exit(1)
+--   end
+-- end
+-- vim.opt.rtp:prepend(lazypath)
+
+-- Setup lazy.nvim
+-- require("lazy").setup({
+--   spec = {
+--     -- import your plugins
+--     { import = "plugins" },
+--   },
+--   -- Configure any other settings here. See the documentation for more details.
+--   -- colorscheme that will be used when installing plugins.
+--   install = { colorscheme = { "habamax" } },
+--   -- automatically check for plugin updates
+--   checker = { enabled = false },
+--   change_detection = {
+--     enabled = false,
+--     notify = false,
+--   }
+-- })
 
 -- ============================================================================
 -- LSP
@@ -476,10 +672,23 @@ vim.diagnostic.config({
   virtual_text = { current_line = true }
 })
 
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   callback = function(ev)
+--     local client = vim.lsp.get_client_by_id(ev.data.client_id)
+--     if client:supports_method('textDocument/completion') then
+--       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+--     end
+--   end,
+-- })
+
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
 -- Lua
 -- install lua-language-server
 vim.lsp.enable("luals")
 vim.lsp.config["luals"] = {
+  capabilities = capabilities,
   cmd = { "lua-language-server" },
   filetypes = { "lua" },
   root_markers = { { ".luarc.json", ".luarc.jsonc" }, ".git" },
@@ -503,6 +712,7 @@ vim.lsp.config["luals"] = {
 -- 2. cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
 vim.lsp.enable("markdown_oxide")
 vim.lsp.config["markdown_oxide"] = {
+  capabilities = capabilities,
   cmd = { "markdown-oxide" },
   filetypes = { "markdown" },
   root_markers = { ".git", ".obsidian", ".moxide.toml" },
@@ -518,6 +728,7 @@ vim.lsp.config["markdown_oxide"] = {
 -- install python by running npm i -g pyright
 vim.lsp.enable("pyright")
 vim.lsp.config["pyright"] = {
+  capabilities = capabilities,
   cmd = { "pyright-langserver", "--stdio" },
   filetypes = { "python" },
   root_markers = { "pyproject.toml", "setup.py", "setup.cfg", ".git" },
@@ -537,6 +748,7 @@ vim.lsp.config["pyright"] = {
 -- Enable a single LSP for HTML, CSS, and JS/TS
 vim.lsp.enable("web")
 vim.lsp.config["web"] = {
+  capabilities = capabilities,
   cmd = { "vscode-html-language-server", "--stdio" }, -- Start with HTML server
   filetypes = { "html", "htmldjango", "eruby" },
   root_markers = { "package.json", ".git", ".eslintrc", ".prettierrc" },
@@ -564,8 +776,24 @@ vim.lsp.config["web"] = {
   },
 }
 
+vim.lsp.enable("emmet_ls")
+vim.lsp.config["emmet_ls"] = {
+  capabilities = capabilities,
+  cmd = { "emmet-ls", "--stdio"},
+  filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
+  init_options = {
+    html = {
+      options = {
+        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
+        ["bem.enabled"] = true,
+      },
+    },
+  }
+}
+
 vim.lsp.enable("css")
 vim.lsp.config["css"] = {
+  capabilities = capabilities,
   cmd = { "vscode-css-language-server", "--stdio" },
   filetypes = { "css", "scss", "less" },
   root_markers = { ".git", "package.json" },
@@ -575,6 +803,7 @@ vim.lsp.config["css"] = {
 -- npm -i g typescript typescript-language-server
 vim.lsp.enable("tsserver")
 vim.lsp.config["tsserver"] = {
+  capabilities = capabilities,
   cmd = { "typescript-language-server", "--stdio" },
   filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
   root_markers = { "package.json", "tsconfig.json", ".git" },
@@ -585,6 +814,7 @@ vim.lsp.config["tsserver"] = {
 -- https://shopify.github.io/ruby-lsp/editors.html#neovim
 vim.lsp.enable("ruby_lsp")
 vim.lsp.config["ruby_lsp"] = {
+  capabilities = capabilities,
   cmd = { "ruby-lsp" },
   filetypes = { "ruby" },
   root_markers = { ".git", "Gemfile", "Rakefile", "Dockerfile" },
@@ -598,15 +828,6 @@ vim.lsp.config["ruby_lsp"] = {
     },
   },
 }
-
-vim.api.nvim_create_autocmd('LspAttach', {
-  callback = function(ev)
-    local client = vim.lsp.get_client_by_id(ev.data.client_id)
-    if client:supports_method('textDocument/completion') then
-      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
-    end
-  end,
-})
 
 -- ============================================================================
 -- Imports
