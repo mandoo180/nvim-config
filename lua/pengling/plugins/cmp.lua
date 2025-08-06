@@ -15,6 +15,20 @@ cmp.setup({
         fallback() -- Normal tab behavior
       end
     end, { "i", "s" }),
+    ["<C-n>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      else
+        fallback()
+      end
+    end),
+    ["<C-p>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      else
+        fallback()
+      end
+    end),
   }),
   sources = cmp.config.sources({
     { name = "nvim_lsp" },

@@ -622,6 +622,20 @@ vim.lsp.config["ruby_lsp"] = {
   },
 }
 
+vim.lsp.enable("lemminx")
+vim.lsp.config["lemminx"] = {
+  capabilities = capabilities,
+  cmd = { "lemminx" },
+  filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
+  settings = {
+    xml = {
+      server = {
+        workDir = "~/.cache/lemminx",
+      },
+    },
+  },
+}
+
 -- ============================================================================
 -- PLUGINS (external)
 -- ============================================================================
