@@ -1,2 +1,21 @@
-# files
+# Lazy.nvim lock file
 lazy-lock.json
+
+# Local/personal directories
+.letta/
+
+# Neovim generated files
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Session files
+Session.vim
+
+# Local configuration (if any)
+.local/
+
+# OS files
+.DS_Store
+Thumbs.db

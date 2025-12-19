@@ -1,13 +1,74 @@
--- ================================================================================================
--- title : Suckless NeoVim Config
--- author: Radley E. Sidwell-lewis
--- ================================================================================================
+-- ============================================================================
+-- NEOVIM CONFIGURATION
+-- ============================================================================
+-- Author: Radley E. Sidwell-lewis (original), consolidated version
+-- Requires: Neovim 0.12+
+-- ============================================================================
 
--- theme & transparency
--- vim.cmd.colorscheme("slate")
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
-vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+-- Neovim 0.12+ APIs and third-party plugins (suppress luals warnings)
+---@diagnostic disable: undefined-field, inject-field, missing-fields, deprecated, param-type-mismatch
+
+-- ============================================================================
+-- PLUGINS
+-- ============================================================================
+
+vim.pack.add {
+    -- Core dependencies
+    { src = "https://github.com/nvim-lua/plenary.nvim" },
+    { src = "https://github.com/nvim-tree/nvim-web-devicons" },
+    { src = "https://github.com/MunifTanjim/nui.nvim" },
+
+    -- Fuzzy finder
+    { src = "https://github.com/nvim-telescope/telescope.nvim" },
+
+    -- File explorer & UI
+    { src = "https://github.com/nvim-neo-tree/neo-tree.nvim" },
+    { src = "https://github.com/akinsho/bufferline.nvim" },
+    { src = "https://github.com/nvim-lualine/lualine.nvim" },
+
+    -- Debugging
+    { src = "https://github.com/nvim-neotest/nvim-nio" },
+    { src = "https://github.com/rcarriga/nvim-dap-ui" },
+    { src = "https://github.com/theHamsta/nvim-dap-virtual-text" },
+    { src = "https://github.com/mfussenegger/nvim-dap" },
+
+    -- Java LSP
+    { src = "https://github.com/mfussenegger/nvim-jdtls" },
+
+    -- Theme
+    { src = "https://github.com/navarasu/onedark.nvim" },
+
+    -- Editing enhancements
+    { src = "https://github.com/echasnovski/mini.pairs" },
+    { src = "https://github.com/tpope/vim-repeat" },
+    { src = "https://github.com/ggandor/leap.nvim" },
+    { src = "https://github.com/mattn/emmet-vim" },
+
+    -- Image viewing (requires kitty, wezterm, or iTerm2)
+    { src = "https://github.com/3rd/image.nvim" },
+
+    -- Treesitter
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
+
+    -- Completion & snippets
+    { src = "https://github.com/hrsh7th/cmp-nvim-lsp" },
+    { src = "https://github.com/hrsh7th/cmp-buffer" },
+    { src = "https://github.com/hrsh7th/cmp-path" },
+    { src = "https://github.com/L3MON4D3/LuaSnip" },
+    { src = "https://github.com/saadparwaiz1/cmp_luasnip" },
+    { src = "https://github.com/hrsh7th/nvim-cmp" },
+    { src = "https://github.com/rafamadriz/friendly-snippets" },
+
+    -- LSP management
+    { src = "https://github.com/neovim/nvim-lspconfig" },
+    { src = "https://github.com/mason-org/mason.nvim" },
+    { src = "https://github.com/mason-org/mason-lspconfig.nvim" },
+}
+
+-- ============================================================================
+-- CORE OPTIONS
+-- ============================================================================
 
 -- Basic settings
 vim.opt.number = true         -- Line numbers
@@ -31,7 +92,10 @@ vim.opt.smartcase = true  -- Case sensitive if uppercase in search
 vim.opt.hlsearch = false  -- Don't highlight search results
 vim.opt.incsearch = true  -- Show matches as you type
 
--- Visual settings
+-- ============================================================================
+-- VISUAL SETTINGS
+-- ============================================================================
+
 vim.opt.termguicolors = true                      -- Enable 24-bit colors
 vim.opt.signcolumn = "yes"                        -- Always show sign column
 vim.opt.colorcolumn = "100"                       -- Show column at 100 characters
@@ -45,10 +109,18 @@ vim.opt.pumblend = 10                             -- Popup menu transparency
 vim.opt.winblend = 0                              -- Floating window transparency
 vim.opt.conceallevel = 0                          -- Don't hide markup
 vim.opt.concealcursor = ""                        -- Don't hide cursor line markup
-vim.opt.lazyredraw = true                         -- Don't redraw during macros
 vim.opt.synmaxcol = 300                           -- Syntax highlighting limit
 
--- File handling
+-- Looks
+vim.o.winborder = "rounded"
+
+-- Tab display settings
+vim.opt.showtabline = 1 -- Show tabline when multiple tabs (0=never, 1=when multiple, 2=always)
+
+-- ============================================================================
+-- FILE HANDLING
+-- ============================================================================
+
 vim.opt.backup = false                            -- Don't create backup files
 vim.opt.writebackup = false                       -- Don't create backup before writing
 vim.opt.swapfile = false                          -- Don't create swap files
@@ -60,13 +132,22 @@ vim.opt.ttimeoutlen = 0                           -- Key code timeout
 vim.opt.autoread = true                           -- Auto reload files changed outside vim
 vim.opt.autowrite = false                         -- Don't auto save
 
--- Behavior settings
+-- Create undo directory if it doesn't exist
+local undodir = vim.fn.expand("~/.vim/undodir")
+if vim.fn.isdirectory(undodir) == 0 then
+    vim.fn.mkdir(undodir, "p")
+end
+
+-- ============================================================================
+-- BEHAVIOR SETTINGS
+-- ============================================================================
+
 vim.opt.hidden = true                   -- Allow hidden buffers
 vim.opt.errorbells = false              -- No error bells
 vim.opt.backspace = "indent,eol,start"  -- Better backspace behavior
 vim.opt.autochdir = false               -- Don't auto change directory
 vim.opt.iskeyword:append("-")           -- Treat dash as part of word
-vim.opt.path:append("**")               -- include subdirectories in search
+vim.opt.path:append("**")               -- Include subdirectories in search
 vim.opt.selection = "exclusive"         -- Selection behavior
 vim.opt.mouse = "a"                     -- Enable mouse support
 vim.opt.clipboard:append("unnamedplus") -- Use system clipboard
@@ -75,12 +156,12 @@ vim.opt.encoding = "UTF-8"              -- Set encoding
 
 -- Cursor settings
 vim.opt.guicursor = {
-  "n-v-c:block",
-  "i-ci-ve:ver25",
-  "r-cr:hor25",
-  "o:hor25",
-  "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
-  "sm:block-blinkwait175-blinkoff150-blinkon175",
+    "n-v-c:block",
+    "i-ci-ve:ver25",
+    "r-cr:hor25",
+    "o:hor25",
+    "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
+    "sm:block-blinkwait175-blinkoff150-blinkon175",
 }
 
 -- Folding settings
@@ -92,14 +173,56 @@ vim.opt.foldlevel = 99                          -- Start with all folds open
 vim.opt.splitbelow = true -- Horizontal splits go below
 vim.opt.splitright = true -- Vertical splits go right
 
--- Key mappings
+-- Command-line completion
+vim.opt.wildmenu = true
+vim.opt.wildmode = "longest:full,full"
+vim.opt.wildignore:append({ "*.o", "*.obj", "*.pyc", "*.class", "*.jar" })
+
+-- Better diff options
+vim.opt.diffopt:append("linematch:60")
+
+-- Performance improvements
+vim.opt.redrawtime = 10000
+vim.opt.maxmempattern = 20000
+
+-- ============================================================================
+-- DIAGNOSTICS
+-- ============================================================================
+
+vim.diagnostic.config({
+    virtual_text = { current_line = true },
+    signs = true,
+    underline = true,
+    update_in_insert = false,
+    severity_sort = true,
+    float = {
+        border = "rounded",
+        source = true,
+        header = "",
+        prefix = "",
+    },
+})
+
+-- Diagnostic navigation
+vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
+vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics to loclist" })
+vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics to quickfix" })
+
+-- Quickfix navigation
+vim.keymap.set("n", "]q", ":cnext<CR>", { desc = "Next quickfix item" })
+vim.keymap.set("n", "[q", ":cprev<CR>", { desc = "Previous quickfix item" })
+vim.keymap.set("n", "]l", ":lnext<CR>", { desc = "Next loclist item" })
+vim.keymap.set("n", "[l", ":lprev<CR>", { desc = "Previous loclist item" })
+
+-- ============================================================================
+-- KEYMAPS - General
+-- ============================================================================
+
 vim.g.mapleader = " "      -- Set leader key to space
-vim.g.maplocalleader = " " -- Set local leader key (NEW)
+vim.g.maplocalleader = " " -- Set local leader key
 
--- Looks
-vim.o.winborder = "rounded"
-
--- Normal mode mappings
+-- Clear search highlights
 vim.keymap.set("n", "<leader>c", ":nohlsearch<CR>", { desc = "Clear search highlights" })
 
 -- Y to EOL
@@ -117,6 +240,16 @@ vim.keymap.set("x", "<leader>p", '"_dP', { desc = "Paste without yanking" })
 -- Delete without yanking
 vim.keymap.set({ "n", "v" }, "<leader>d", '"_d', { desc = "Delete without yanking" })
 
+-- Better J behavior
+vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
+
+-- Spell check toggle
+vim.keymap.set("n", "<leader>ss", ":setlocal spell! spelllang=en_us<CR>", { desc = "Toggle spell check" })
+
+-- ============================================================================
+-- KEYMAPS - Buffer/Window Navigation
+-- ============================================================================
+
 -- Buffer navigation
 vim.keymap.set("n", "<leader>]", ":bnext<CR>", { desc = "Next buffer" })
 vim.keymap.set("n", "<leader>[", ":bprevious<CR>", { desc = "Previous buffer" })
@@ -125,6 +258,10 @@ vim.keymap.set("n", "<leader>k", ":bd%<CR>", { desc = "Kill current buffer" })
 -- Splitting & Resizing
 vim.keymap.set("n", "<leader>|", ":vsplit<CR>", { desc = "Split window vertically" })
 vim.keymap.set("n", "<leader>_", ":split<CR>", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>3", ":vsplit<CR>", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>2", ":split<CR>", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>1", "<Cmd>only<CR>", { desc = "Close other windows" })
+vim.keymap.set("n", "<leader>o", "<C-w>w", { desc = "Cycle to next window" })
 vim.keymap.set("n", "<C-Up>", ":resize +2<CR>", { desc = "Increase window height" })
 vim.keymap.set("n", "<C-Down>", ":resize -2<CR>", { desc = "Decrease window height" })
 vim.keymap.set("n", "<C-Left>", ":vertical resize -2<CR>", { desc = "Decrease window width" })
@@ -140,22 +277,23 @@ vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 vim.keymap.set("v", "<", "<gv", { desc = "Indent left and reselect" })
 vim.keymap.set("v", ">", ">gv", { desc = "Indent right and reselect" })
 
--- Quick file navigation
--- vim.keymap.set("n", "<leader>e", ":Neotree toggle<CR>", { desc = "Open file explorer" })
-vim.keymap.set("n", "<leader>ff", ":find ", { desc = "Find file" })
-
--- Better J behavior
-vim.keymap.set("n", "J", "mzJ`z", { desc = "Join lines and keep cursor position" })
-
 -- Quick config editing
-vim.keymap.set("n", "<leader>rc", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
+vim.keymap.set("n", "<leader>re", ":e ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
+vim.keymap.set("n", "<leader>rr", ":source ~/.config/nvim/init.lua<CR>", { desc = "Edit config" })
 
--- Motions in insert mode
+-- ============================================================================
+-- KEYMAPS - Emacs-style Motions
+-- ============================================================================
+
 local opts = { noremap = true, silent = true }
+
+-- Normal/Visual mode escape
 vim.keymap.set("n", "<C-g>", "<ESC>", opts)
 vim.keymap.set("v", "<C-g>", "<ESC>", opts)
 
+-- Insert mode
 vim.keymap.set("i", "jj", "<ESC>", opts)
+vim.keymap.set("i", "jk", "<ESC>", opts)
 vim.keymap.set("i", "<C-f>", "<Right>", opts)
 vim.keymap.set("i", "<C-b>", "<Left>", opts)
 vim.keymap.set("i", "<C-n>", "<Down>", opts)
@@ -173,7 +311,7 @@ vim.keymap.set("i", "<M-DEL>", "<C-o>dw", opts)
 vim.keymap.set("i", "<M-d>", "<C-o>dw", opts)
 vim.keymap.set("i", "<C-g>", "<ESC>", opts)
 
--- Motions in minibuffer
+-- Command mode
 vim.keymap.set("c", "<C-f>", "<Right>")
 vim.keymap.set("c", "<C-b>", "<Left>")
 vim.keymap.set("c", "<C-p>", "<Up>")
@@ -184,471 +322,764 @@ vim.keymap.set("c", "<M-f>", "<C-Right>")
 vim.keymap.set("c", "<M-b>", "<C-Left>")
 vim.keymap.set("c", "<C-a>", "<Home>")
 vim.keymap.set("c", "<C-e>", "<End>")
-
 vim.keymap.set("c", "<C-d>", "<Del>")
 vim.keymap.set("c", "<M-d>", "<C-Del>")
 vim.keymap.set("c", "<M-BS>", "<C-BS>")
 vim.keymap.set("c", "<C-g>", "<ESC>")
 
 -- ============================================================================
--- USEFUL FUNCTIONS
+-- UTILITY FUNCTIONS
 -- ============================================================================
 
 -- Copy Full File-Path
 vim.keymap.set("n", "<leader>pa", function()
-  local path = vim.fn.expand("%:p")
-  vim.fn.setreg("+", path)
-  print("file:", path)
-end)
+    local path = vim.fn.expand("%:p")
+    vim.fn.setreg("+", path)
+    print("file:", path)
+end, { desc = "Copy absolute file path" })
 
--- Basic autocommands
+-- ============================================================================
+-- AUTOCOMMANDS
+-- ============================================================================
+
 local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 
 -- Highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
-  group = augroup,
-  callback = function()
-    vim.highlight.on_yank()
-  end,
+    group = augroup,
+    pattern = "*",
+    callback = function()
+        vim.highlight.on_yank()
+    end,
 })
 
 -- Return to last edit position when opening files
 vim.api.nvim_create_autocmd("BufReadPost", {
-  group = augroup,
-  callback = function()
-    local mark = vim.api.nvim_buf_get_mark(0, '"')
-    local lcount = vim.api.nvim_buf_line_count(0)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
-  end,
+    group = augroup,
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        local lcount = vim.api.nvim_buf_line_count(0)
+        if mark[1] > 0 and mark[1] <= lcount then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
 })
 
 -- Set filetype-specific settings
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = { "python", "java" },
-  callback = function()
-    vim.opt_local.tabstop = 4
-    vim.opt_local.shiftwidth = 4
-  end,
+    group = augroup,
+    pattern = { "python" },
+    callback = function()
+        vim.opt_local.tabstop = 4
+        vim.opt_local.shiftwidth = 4
+    end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = augroup,
-  pattern = { "lua", "javascript", "typescript", "json", "html", "htmldjango", "eruby", "css" },
-  callback = function()
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-  end,
+    group = augroup,
+    pattern = { "lua", "javascript", "typescript", "json", "html", "htmldjango", "eruby", "css" },
+    callback = function()
+        vim.opt_local.tabstop = 2
+        vim.opt_local.shiftwidth = 2
+    end,
 })
 
 -- Auto-close terminal when process exits
 vim.api.nvim_create_autocmd("TermClose", {
-  group = augroup,
-  callback = function()
-    if vim.v.event.status == 0 then
-      vim.api.nvim_buf_delete(0, {})
-    end
-  end,
+    group = augroup,
+    pattern = "*",
+    callback = function()
+        if vim.v.event.status == 0 then
+            vim.api.nvim_buf_delete(0, {})
+        end
+    end,
 })
 
 -- Disable line numbers in terminal
 vim.api.nvim_create_autocmd("TermOpen", {
-  group = augroup,
-  callback = function()
-    vim.opt_local.number = false
-    vim.opt_local.relativenumber = false
-    vim.opt_local.signcolumn = "no"
-  end,
+    group = augroup,
+    pattern = "*",
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.signcolumn = "no"
+    end,
 })
 
 -- Auto-resize splits when window is resized
 vim.api.nvim_create_autocmd("VimResized", {
-  group = augroup,
-  callback = function()
-    vim.cmd("tabdo wincmd =")
-  end,
+    group = augroup,
+    pattern = "*",
+    callback = function()
+        vim.cmd("tabdo wincmd =")
+    end,
 })
 
 -- Create directories when saving files
 vim.api.nvim_create_autocmd("BufWritePre", {
-  group = augroup,
-  callback = function()
-    local dir = vim.fn.expand("<afile>:p:h")
-    if vim.fn.isdirectory(dir) == 0 then
-      vim.fn.mkdir(dir, "p")
-    end
-  end,
+    group = augroup,
+    callback = function()
+        local dir = vim.fn.expand("<afile>:p:h")
+        if vim.fn.isdirectory(dir) == 0 then
+            vim.fn.mkdir(dir, "p")
+        end
+    end,
 })
 
--- Command-line completion
-vim.opt.wildmenu = true
-vim.opt.wildmode = "longest:full,full"
-vim.opt.wildignore:append({ "*.o", "*.obj", "*.pyc", "*.class", "*.jar" })
+-- Auto-open quickfix after grep/make
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    group = augroup,
+    pattern = { "[^l]*" },
+    callback = function()
+        vim.cmd("copen")
+    end,
+})
 
--- Better diff options
-vim.opt.diffopt:append("linematch:60")
+-- Auto-open loclist
+vim.api.nvim_create_autocmd("QuickFixCmdPost", {
+    group = augroup,
+    pattern = { "l*" },
+    callback = function()
+        vim.cmd("lopen")
+    end,
+})
 
--- Performance improvements
-vim.opt.redrawtime = 10000
-vim.opt.maxmempattern = 20000
+-- Transparent tabline
+vim.cmd([[hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE]])
 
--- Create undo directory if it doesn't exist
-local undodir = vim.fn.expand("~/.vim/undodir")
-if vim.fn.isdirectory(undodir) == 0 then
-  vim.fn.mkdir(undodir, "p")
-end
+-- ============================================================================
+-- FILETYPE: JAVA
+-- ============================================================================
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "java",
+    callback = function()
+        vim.opt_local.tabstop = 4
+        vim.opt_local.shiftwidth = 4
+
+        local ok, jdtls = pcall(require, "jdtls")
+        if not ok then
+            vim.notify("jdtls not available", vim.log.levels.WARN)
+            return
+        end
+
+        local data_dir = vim.fn.stdpath("data")
+        local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+        local workspace_dir = data_dir .. "/jdtls-workspaces/" .. project_name
+
+        local system_types = {
+            Linux = "linux",
+            Darwin = "mac",
+            Windows = "win",
+            Windows_NT = "win",
+        }
+        local system_type = system_types[vim.uv.os_uname().sysname]
+        local java_home = os.getenv("JAVA_HOME")
+        local java = java_home and java_home .. "/bin/java" or "java"
+
+        local jdtls_config = {
+            cmd = {
+                java,
+                "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+                "-Dosgi.bundles.defaultStartLevel=4",
+                "-Declipse.product=org.eclipse.jdt.ls.core.product",
+                "-Dlog.protocol=true",
+                "-Dlog.level=ALL",
+                "-Xmx1g",
+                "--add-modules=ALL-SYSTEM",
+                "--add-opens",
+                "java.base/java.util=ALL-UNNAMED",
+                "--add-opens",
+                "java.base/java.lang=ALL-UNNAMED",
+                "-jar",
+                vim.fn.stdpath("data") .. "/jdtls/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
+                "-configuration",
+                vim.fn.stdpath("data") .. "/jdtls/config_" .. system_type,
+                "-data",
+                workspace_dir,
+            },
+            settings = {
+                java = {
+                    signatureHelp = { enabled = true },
+                    contentProvider = { preferred = "fernflower" },
+                    eclipse = { downloadSources = true },
+                    configuration = { updateBuildConfiguration = "interactive" },
+                    maven = { downloadSources = true },
+                    implementationsCodeLens = { enabled = true },
+                    referencesCodeLens = { enabled = true },
+                    references = { includeDecompiledSources = true },
+                    format = { enabled = true },
+                },
+            },
+            init_options = {
+                bundles = {
+                    vim.fn.stdpath("data") ..
+                    "/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-0.53.2.jar",
+                },
+            },
+            on_attach = function(_, bufnr)
+                local dap_ok, dap = pcall(require, "dap")
+                if dap_ok then
+                    dap.set_log_level("DEBUG")
+                    dap.configurations.java = {
+                        {
+                            type = "java",
+                            request = "attach",
+                            name = "Attach to Running App",
+                            hostName = "127.0.0.1",
+                            port = 1044,
+                        },
+                    }
+                    jdtls.setup_dap({ hotcodereplace = "auto" })
+                end
+                jdtls.setup.add_commands()
+                vim.keymap.set("n", "<M-o>", jdtls.organize_imports,
+                    { silent = true, buffer = bufnr, desc = "Organize imports" })
+            end
+        }
+
+        jdtls.start_or_attach(jdtls_config)
+    end,
+})
+
+-- ============================================================================
+-- FILETYPE: MARKDOWN
+-- ============================================================================
+
+vim.api.nvim_create_autocmd("FileType", {
+    group = augroup,
+    pattern = "markdown",
+    callback = function()
+        -- Local options
+        vim.opt_local.textwidth = 80
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+        vim.opt_local.conceallevel = 0  -- Show all markup
+
+        local bufnr = vim.api.nvim_get_current_buf()
+
+        -- Format entire markdown file with prettier
+        local function format_markdown_table()
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            if vim.fn.executable("prettier") == 1 then
+                vim.cmd("silent %!prettier --stdin-filepath %.md --prose-wrap always")
+                vim.api.nvim_win_set_cursor(0, cursor_pos)
+                print("Formatted with prettier")
+            else
+                print("Prettier not found. Install with: npm i -g prettier")
+            end
+        end
+
+        -- Format just the current table
+        local function format_current_table()
+            local cursor_pos = vim.api.nvim_win_get_cursor(0)
+            local line_num = cursor_pos[1]
+            local start_line = line_num
+            local end_line = line_num
+            local total_lines = vim.api.nvim_buf_line_count(0)
+
+            -- Find start of table
+            while start_line > 1 do
+                local line = vim.api.nvim_buf_get_lines(0, start_line - 2, start_line - 1, false)[1]
+                if line and line:match("^%s*|") then
+                    start_line = start_line - 1
+                else
+                    break
+                end
+            end
+
+            -- Find end of table
+            while end_line < total_lines do
+                local line = vim.api.nvim_buf_get_lines(0, end_line, end_line + 1, false)[1]
+                if line and line:match("^%s*|") then
+                    end_line = end_line + 1
+                else
+                    break
+                end
+            end
+
+            if vim.fn.executable("prettier") == 1 then
+                vim.cmd(string.format("silent %d,%d!prettier --stdin-filepath table.md --parser markdown", start_line,
+                    end_line))
+                vim.api.nvim_win_set_cursor(0, cursor_pos)
+                print("Table formatted")
+            else
+                print("Prettier not found. Install with: npm i -g prettier")
+            end
+        end
+
+        -- Keymaps (buffer-local)
+        vim.keymap.set("n", "<leader>mf", format_markdown_table, {
+            buffer = bufnr,
+            desc = "Format entire markdown file with prettier"
+        })
+
+        vim.keymap.set("n", "<leader>mt", format_current_table, {
+            buffer = bufnr,
+            desc = "Format current markdown table"
+        })
+
+        vim.keymap.set("n", "<Leader><Tab>", function()
+            if #vim.lsp.get_clients({ buffer = 0 }) > 0 then
+                vim.lsp.buf.format()
+            else
+                format_markdown_table()
+            end
+        end, {
+            buffer = bufnr,
+            desc = "Format markdown (LSP or prettier)"
+        })
+    end,
+})
 
 -- ============================================================================
 -- FLOATING TERMINAL
 -- ============================================================================
 
--- terminal
 local terminal_state = {
-  buf = nil,
-  win = nil,
-  is_open = false,
+    buf = nil,
+    win = nil,
+    is_open = false,
 }
 
 local function FloatingTerminal()
-  -- If terminal is already open, close it (toggle behavior)
-  if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
-    vim.api.nvim_win_close(terminal_state.win, false)
-    terminal_state.is_open = false
-    return
-  end
-
-  -- Create buffer if it doesn't exist or is invalid
-  if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
-    terminal_state.buf = vim.api.nvim_create_buf(false, true)
-    -- Set buffer options for better terminal experience
-    vim.api.nvim_buf_set_option(terminal_state.buf, "bufhidden", "hide")
-  end
-
-  -- Calculate window dimensions
-  local width = math.floor(vim.o.columns * 0.8)
-  local height = math.floor(vim.o.lines * 0.8)
-  local row = math.floor((vim.o.lines - height) / 2)
-  local col = math.floor((vim.o.columns - width) / 2)
-
-  -- Create the floating window
-  terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
-    relative = "editor",
-    width = width,
-    height = height,
-    row = row,
-    col = col,
-    style = "minimal",
-    border = "rounded",
-  })
-
-  -- Set transparency for the floating window
-  vim.api.nvim_win_set_option(terminal_state.win, "winblend", 0)
-
-  -- Set transparent background for the window
-  vim.api.nvim_win_set_option(
-    terminal_state.win,
-    "winhighlight",
-    "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
-  )
-
-  -- Define highlight groups for transparency
-  vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
-  vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
-
-  -- Start terminal if not already running
-  local has_terminal = false
-  local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
-  for _, line in ipairs(lines) do
-    if line ~= "" then
-      has_terminal = true
-      break
-    end
-  end
-
-  if not has_terminal then
-    vim.fn.termopen(os.getenv("SHELL"))
-  end
-
-  terminal_state.is_open = true
-  vim.cmd("startinsert")
-
-  -- Set up auto-close on buffer leave
-  vim.api.nvim_create_autocmd("BufLeave", {
-    buffer = terminal_state.buf,
-    callback = function()
-      if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
+    -- If terminal is already open, close it (toggle behavior)
+    if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
         vim.api.nvim_win_close(terminal_state.win, false)
         terminal_state.is_open = false
-      end
-    end,
-    once = true,
-  })
+        return
+    end
+
+    -- Create buffer if it doesn't exist or is invalid
+    if not terminal_state.buf or not vim.api.nvim_buf_is_valid(terminal_state.buf) then
+        terminal_state.buf = vim.api.nvim_create_buf(false, true)
+        vim.bo[terminal_state.buf].bufhidden = "hide"
+    end
+
+    -- Calculate window dimensions
+    local width = math.floor(vim.o.columns * 0.8)
+    local height = math.floor(vim.o.lines * 0.8)
+    local row = math.floor((vim.o.lines - height) / 2)
+    local col = math.floor((vim.o.columns - width) / 2)
+
+    -- Create the floating window
+    terminal_state.win = vim.api.nvim_open_win(terminal_state.buf, true, {
+        relative = "editor",
+        width = width,
+        height = height,
+        row = row,
+        col = col,
+        style = "minimal",
+        border = "rounded",
+    })
+
+    -- Set transparency for the floating window
+    vim.wo[terminal_state.win].winblend = 0
+    vim.wo[terminal_state.win].winhighlight = "Normal:FloatingTermNormal,FloatBorder:FloatingTermBorder"
+
+    -- Define highlight groups for transparency
+    vim.api.nvim_set_hl(0, "FloatingTermNormal", { bg = "none" })
+    vim.api.nvim_set_hl(0, "FloatingTermBorder", { bg = "none" })
+
+    -- Start terminal if not already running
+    local has_terminal = false
+    local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
+    for _, line in ipairs(lines) do
+        if line ~= "" then
+            has_terminal = true
+            break
+        end
+    end
+
+    if not has_terminal then
+        vim.fn.termopen(os.getenv("SHELL") or "/bin/sh")
+    end
+
+    terminal_state.is_open = true
+    vim.cmd("startinsert")
+
+    -- Set up auto-close on buffer leave
+    vim.api.nvim_create_autocmd("BufLeave", {
+        buffer = terminal_state.buf,
+        callback = function()
+            if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
+                vim.api.nvim_win_close(terminal_state.win, false)
+                terminal_state.is_open = false
+            end
+        end,
+        once = true,
+    })
 end
 
--- Function to explicitly close the terminal
--- local function CloseFloatingTerminal()
---   if terminal_state.is_open and vim.api.nvim_win_is_valid(terminal_state.win) then
---     vim.api.nvim_win_close(terminal_state.win, false)
---     terminal_state.is_open = false
---   end
--- end
-
--- Key mappings
+-- Terminal keymaps
 local hide_term_window = function()
-  if terminal_state.is_open then
-    vim.api.nvim_win_close(terminal_state.win, false)
-    terminal_state.is_open = false
-  end
+    if terminal_state.is_open then
+        vim.api.nvim_win_close(terminal_state.win, false)
+        terminal_state.is_open = false
+    end
 end
+
 vim.keymap.set("t", "<Esc>", hide_term_window, {
-  noremap = true,
-  silent = true,
-  desc = "Close floating terminal from terminal mode"
+    noremap = true,
+    silent = true,
+    desc = "Close floating terminal from terminal mode"
 })
+
 vim.keymap.set("n", "<leader>`", FloatingTerminal, {
-  noremap = true,
-  silent = true,
-  desc = "Toggle floating terminal"
+    noremap = true,
+    silent = true,
+    desc = "Toggle floating terminal"
 })
 
 -- ============================================================================
--- TABS
+-- LSP CONFIGURATION
 -- ============================================================================
 
--- Tab display settings
-vim.opt.showtabline = 1 -- Always show tabline (0=never, 1=when multiple tabs, 2=always)
-vim.opt.tabline = ""    -- Use default tabline (empty string uses built-in)
+vim.keymap.set("n", "<Leader><Tab>", vim.lsp.buf.format, { desc = "Format document" })
+vim.keymap.set("i", "<C-Space>", vim.lsp.completion.get, { desc = "Trigger completion" })
 
--- Transparent tabline appearance
-vim.cmd([[
-  hi TabLineFill guibg=NONE ctermfg=242 ctermbg=NONE
-]])
-
--- ============================================================================
--- LSP
--- ============================================================================
-
--- :h lsp-quickstart for more info for LSP
-
-vim.keymap.set('n', '<Leader><Tab>', vim.lsp.buf.format)
-vim.keymap.set('i', '<C-Space>', vim.lsp.completion.get)
-vim.diagnostic.config({
-  virtual_text = { current_line = true }
+-- LSP attach keymaps
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = augroup,
+    callback = function(ev)
+        local o = { buffer = ev.buf }
+        vim.keymap.set("n", "gd", vim.lsp.buf.definition, o)
+        vim.keymap.set("n", "gD", vim.lsp.buf.declaration, o)
+        vim.keymap.set("n", "gr", vim.lsp.buf.references, o)
+        vim.keymap.set("n", "gi", vim.lsp.buf.implementation, o)
+        vim.keymap.set("n", "K", vim.lsp.buf.hover, o)
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, o)
+        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, o)
+    end,
 })
-
--- vim.api.nvim_create_autocmd('LspAttach', {
---   callback = function(ev)
---     local client = vim.lsp.get_client_by_id(ev.data.client_id)
---     if client:supports_method('textDocument/completion') then
---       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
---     end
---   end,
--- })
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Lua
--- install lua-language-server
 vim.lsp.enable("luals")
 vim.lsp.config["luals"] = {
-  capabilities = capabilities,
-  cmd = { "lua-language-server" },
-  filetypes = { "lua" },
-  root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
-  settings = {
-    Lua = {
-      runtime = {
-        version = "LuaJIT",
-        path = {
-          "?.lua",
-          "?/init.lua",
-          vim.fn.stdpath("config") .. "/lua/?.lua",
-          vim.fn.stdpath("config") .. "/lua/pengling/?.lua",
-          vim.fn.stdpath("config") .. "/lua/pengling/plugins/?.lua",
-          vim.fn.stdpath("config") .. "/lua/pengling/utils/?.lua",
+    capabilities = capabilities,
+    cmd = { "lua-language-server" },
+    filetypes = { "lua" },
+    root_markers = { ".luarc.json", ".luarc.jsonc", ".git" },
+    settings = {
+        Lua = {
+            runtime = {
+                version = "LuaJIT",
+                path = { "?.lua", "?/init.lua" },
+            },
+            workspace = {
+                checkThirdParty = false,
+                library = {
+                    vim.fn.expand("$VIMRUNTIME/lua"),
+                    vim.fn.expand("$VIMRUNTIME/lua/vim"),
+                    vim.fn.expand("$VIMRUNTIME/lua/vim/lsp"),
+                },
+            },
+            diagnostics = { globals = { "vim" } },
+            format = { enable = true },
         },
-      },
-      workspace = {
-        checkThirdParty = false,
-        library = {
-          vim.fn.expand("$VIMRUNTIME/lua"),
-          vim.fn.expand("$VIMRUNTIME/lua/vim"),
-          vim.fn.expand("$VIMRUNTIME/lua/vim/lsp"),
-        },
-      },
-      diagnostics = {
-        globals = { "vim" },
-      },
-      format = {
-        enable = true,
-      },
     },
-  },
 }
 
--- Markdown
--- 1. install cargo using rustup
--- 2. cargo install --locked --git https://github.com/Feel-ix-343/markdown-oxide.git markdown-oxide
+-- Markdown Oxide
 vim.lsp.enable("markdown_oxide")
 vim.lsp.config["markdown_oxide"] = {
-  capabilities = capabilities,
-  cmd = { "markdown-oxide" },
-  filetypes = { "markdown" },
-  root_markers = { ".git", ".obsidian", ".moxide.toml" },
-  on_attach = function(_, bufnr)
-    vim.api.nvim_buf_create_user_command(bufnr, "MarkdownPreview", function()
-      local bufnm = vim.api.nvim_buf_get_name(bufnr)
-      vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. bufnm .. "' > /dev/null &")
-    end, { desc = "Preview a markdown file." })
-  end,
+    capabilities = capabilities,
+    cmd = { "markdown-oxide" },
+    filetypes = { "markdown" },
+    root_markers = { ".git", ".obsidian", ".moxide.toml" },
+    on_attach = function(_, bufnr)
+        vim.api.nvim_buf_create_user_command(bufnr, "MarkdownPreview", function()
+            local bufnm = vim.api.nvim_buf_get_name(bufnr)
+            vim.cmd("!nohup firefox 'http://localhost:5000/render?path=" .. bufnm .. "' > /dev/null &")
+        end, { desc = "Preview a markdown file." })
+    end,
+}
+
+-- Marksman
+vim.lsp.enable("marksman")
+vim.lsp.config["marksman"] = {
+    capabilities = capabilities,
+    cmd = { "marksman", "server" },
+    filetypes = { "markdown" },
+    root_markers = { ".git", ".marksman.toml" },
 }
 
 -- Python
--- install python by running npm i -g pyright
 vim.lsp.enable("pyright")
 vim.lsp.config["pyright"] = {
-  capabilities = capabilities,
-  cmd = { "pyright-langserver", "--stdio" },
-  filetypes = { "python" },
-  root_markers = { "pyproject.toml", "setup.py", "setup.cfg", ".git" },
-  settings = {
-    python = {
-      analysis = {
-        typeCheckingMode = "basic", -- or 'strict' for stricter checks
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-      },
+    capabilities = capabilities,
+    cmd = { "pyright-langserver", "--stdio" },
+    filetypes = { "python" },
+    root_markers = { "pyproject.toml", "setup.py", "setup.cfg", ".git" },
+    settings = {
+        python = {
+            analysis = {
+                typeCheckingMode = "basic",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+            },
+        },
     },
-  },
 }
 
--- Web
--- npm i -g vscode-langservers-extracted
--- Enable a single LSP for HTML, CSS, and JS/TS
+-- Web (HTML)
 vim.lsp.enable("web")
 vim.lsp.config["web"] = {
-  capabilities = capabilities,
-  cmd = { "vscode-html-language-server", "--stdio" }, -- Start with HTML server
-  filetypes = { "html", "htmldjango", "eruby" },
-  root_markers = { "package.json", ".git", ".eslintrc", ".prettierrc" },
-  -- Optional: Extend settings if needed
-  init_options = {
-    provideFormatter = true,
-  },
-  settings = {
-    css = {
-      validate = true,
+    capabilities = capabilities,
+    cmd = { "vscode-html-language-server", "--stdio" },
+    filetypes = { "html", "htmldjango", "eruby" },
+    root_markers = { "package.json", ".git", ".eslintrc", ".prettierrc" },
+    init_options = { provideFormatter = true },
+    settings = {
+        css = { validate = true },
+        javascript = { validate = true, format = { enable = true } },
+        html = {
+            format = {
+                enable = true,
+                wrapLineLength = 120,
+                unformatted = "pre,code,textarea",
+            },
+        },
     },
-    javascript = {
-      validate = true,
-      format = {
-        enable = true,
-      },
-    },
-    html = {
-      format = {
-        enable = true,
-        wrapLineLength = 120,
-        unformatted = "pre,code,textarea",
-      },
-    },
-  },
 }
 
+-- JSON
 vim.lsp.enable("jsonls")
 vim.lsp.config["jsonls"] = {
-  capabilities = capabilities,
-  cmd = { "vscode-json-language-server", "--stdio" },
-  filetypes = { "json" },
-  root_markers = { ".git" },
-  init_options = {
-    provideFormatter = true,
-  },
+    capabilities = capabilities,
+    cmd = { "vscode-json-language-server", "--stdio" },
+    filetypes = { "json" },
+    root_markers = { ".git" },
+    init_options = { provideFormatter = true },
 }
 
+-- Emmet
 vim.lsp.enable("emmet_ls")
 vim.lsp.config["emmet_ls"] = {
-  capabilities = capabilities,
-  cmd = { "emmet-ls", "--stdio" },
-  filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
-  init_options = {
-    html = {
-      options = {
-        -- For possible options, see: https://github.com/emmetio/emmet/blob/master/src/config.ts#L79-L267
-        ["bem.enabled"] = true,
-      },
-    },
-  }
+    capabilities = capabilities,
+    cmd = { "emmet-ls", "--stdio" },
+    filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "svelte", "pug", "typescriptreact", "vue" },
+    init_options = {
+        html = {
+            options = { ["bem.enabled"] = true },
+        },
+    }
 }
 
+-- CSS
 vim.lsp.enable("css")
 vim.lsp.config["css"] = {
-  capabilities = capabilities,
-  cmd = { "vscode-css-language-server", "--stdio" },
-  filetypes = { "css", "scss", "less" },
-  root_markers = { ".git", "package.json" },
+    capabilities = capabilities,
+    cmd = { "vscode-css-language-server", "--stdio" },
+    filetypes = { "css", "scss", "less" },
+    root_markers = { ".git", "package.json" },
 }
 
--- Typescript
--- npm -i g typescript typescript-language-server
+-- TypeScript
 vim.lsp.enable("tsserver")
 vim.lsp.config["tsserver"] = {
-  capabilities = capabilities,
-  cmd = { "typescript-language-server", "--stdio" },
-  filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
-  root_markers = { "package.json", "tsconfig.json", ".git" },
+    capabilities = capabilities,
+    cmd = { "typescript-language-server", "--stdio" },
+    filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+    root_markers = { "package.json", "tsconfig.json", ".git" },
 }
 
 -- Ruby
--- gem install ruby-lsp
--- https://shopify.github.io/ruby-lsp/editors.html#neovim
 vim.lsp.enable("ruby_lsp")
 vim.lsp.config["ruby_lsp"] = {
-  capabilities = capabilities,
-  cmd = { "ruby-lsp" },
-  filetypes = { "ruby" },
-  root_markers = { ".git", "Gemfile", "Rakefile", "Dockerfile" },
-  init_options = {
-    formatter = "standard",
-    linters = { "standard" },
-    addonSettings = {
-      ["Ruby LSP Rails"] = {
-        enablePendingMigrationsPrompt = false,
-      },
+    capabilities = capabilities,
+    cmd = { "ruby-lsp" },
+    filetypes = { "ruby" },
+    root_markers = { ".git", "Gemfile", "Rakefile", "Dockerfile" },
+    init_options = {
+        formatter = "standard",
+        linters = { "standard" },
+        addonSettings = {
+            ["Ruby LSP Rails"] = { enablePendingMigrationsPrompt = false },
+        },
     },
-  },
 }
 
+-- XML (Lemminx)
 vim.lsp.enable("lemminx")
 vim.lsp.config["lemminx"] = {
-  capabilities = capabilities,
-  cmd = { "lemminx" },
-  filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
-  settings = {
-    xml = {
-      server = {
-        workDir = "~/.cache/lemminx",
-      },
+    capabilities = capabilities,
+    cmd = { "lemminx" },
+    filetypes = { "xml", "xsd", "xsl", "xslt", "svg" },
+    settings = {
+        xml = {
+            server = { workDir = "~/.cache/lemminx" },
+        },
     },
-  },
 }
 
 -- ============================================================================
--- PLUGINS (external)
+-- PLUGIN CONFIGS
 -- ============================================================================
 
-require "pengling.plugins.init"
-require "pengling.plugins.treesitter"
-require "pengling.plugins.theme"
-require "pengling.plugins.utils"
-require "pengling.plugins.telescope"
-require "pengling.plugins.cmp"
+-- Mason
+require("mason").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = { "lemminx" },
+})
 
--- ============================================================================
--- Custom Utils
--- ============================================================================
+-- Treesitter
+require("nvim-treesitter.configs").setup({
+    ensure_installed = {
+        "awk", "c", "clojure", "css", "csv", "desktop", "diff", "dockerfile",
+        "git_config", "gitcommit", "gitignore", "go", "html", "htmldjango",
+        "http", "ini", "java", "javascript", "jinja_inline", "jinja", "jq",
+        "json", "kdl", "lua", "make", "markdown_inline", "markdown", "nginx",
+        "perl", "python", "query", "ruby", "rust", "scheme", "sql", "ssh_config",
+        "tmux", "toml", "tsv", "tsx", "typescript", "vim", "vimdoc", "xml", "yaml",
+    },
+    sync_install = false,
+    auto_install = false,
+    highlight = {
+        enable = true,
+        disable = function(_, buf)
+            local max_filesize = 100 * 1024 -- 100 KB
+            local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
+            if ok and stats and stats.size > max_filesize then
+                return true
+            end
+        end,
+        additional_vim_regex_highlighting = false,
+    },
+    indent = { enable = true },
+    textobjects = {
+        select = {
+            enable = true,
+            lookahead = true,
+            keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = "@class.inner",
+            },
+        },
+    },
+})
 
-require "pengling.utils.douzone"
+-- Completion (nvim-cmp)
+local cmp = require("cmp")
+cmp.setup({
+    snippet = {
+        expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+        end,
+    },
+    mapping = cmp.mapping.preset.insert({
+        ["<Tab>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.confirm({ select = true })
+            elseif require("luasnip").expand_or_jumpable() then
+                require("luasnip").expand_or_jump()
+            else
+                fallback()
+            end
+        end, { "i", "s" }),
+        ["<C-n>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_next_item()
+            else
+                fallback()
+            end
+        end),
+        ["<C-p>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+                cmp.select_prev_item()
+            else
+                fallback()
+            end
+        end),
+    }),
+    sources = cmp.config.sources({
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "buffer" },
+        { name = "path" },
+    }),
+    completion = {
+        completeopt = "menu,menuone,noinsert"
+    }
+})
+
+require("luasnip.loaders.from_vscode").lazy_load()
+
+-- Theme
+require("onedark").setup({ style = "darker" })
+require("onedark").load()
+require("lualine").setup({})
+require("bufferline").setup({})
+
+-- Apply transparency after theme loads
+vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
+vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+
+-- Mini.pairs
+require("mini.pairs").setup({})
+
+-- Leap
+require("leap").set_default_mappings()
+
+-- Neo-tree
+vim.keymap.set("n", "<leader>e", "<Cmd>Neotree toggle<CR>", { desc = "Toggle file explorer" })
+
+-- Telescope
+local telescope = require("telescope")
+telescope.setup({
+    defaults = {
+        mappings = {
+            i = { ["<C-g>"] = require("telescope.actions").close },
+            n = { ["<C-g>"] = require("telescope.actions").close },
+        },
+    },
+})
+
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Find grep" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffers" })
+vim.keymap.set("n", "<leader>bb", builtin.buffers, { desc = "Find buffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help tags" })
+vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Find marks" })
+vim.keymap.set("n", "<leader>fp", builtin.registers, { desc = "Find registers" })
+vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = "Find symbols" })
+vim.keymap.set("n", "<leader>fw", builtin.lsp_workspace_symbols, { desc = "Find workspace symbols" })
+vim.keymap.set("n", "<leader>fr", builtin.lsp_references, { desc = "Find references" })
+vim.keymap.set("n", "<leader>fi", builtin.lsp_implementations, { desc = "Find implementations" })
+vim.keymap.set("n", "<leader>fd", builtin.lsp_definitions, { desc = "Find definitions" })
+vim.keymap.set("n", "<leader>ft", builtin.lsp_type_definitions, { desc = "Find type definitions" })
+vim.keymap.set("n", "<leader>fe", builtin.diagnostics, { desc = "Find errors (diagnostics)" })
+vim.keymap.set("n", "<leader>fc", builtin.commands, { desc = "Find commands" })
+
+-- Image.nvim (requires terminal with graphics support: kitty, wezterm, or iTerm2)
+local image_ok, image = pcall(require, "image")
+if image_ok then
+    image.setup({
+        backend = "kitty", -- "kitty" or "ueberzug"
+        integrations = {
+            markdown = {
+                enabled = true,
+                clear_in_insert_mode = false,
+                download_remote_images = true,
+                only_render_image_at_cursor = false,
+                filetypes = { "markdown", "vimwiki" },
+            },
+            neorg = { enabled = false },
+        },
+        max_width = 100,
+        max_height = 12,
+        max_width_window_percentage = math.huge,
+        max_height_window_percentage = math.huge,
+        window_overlap_clear_enabled = false,
+        editor_only_render_when_focused = false,
+        tmux_show_only_in_active_window = false,
+    })
+end
